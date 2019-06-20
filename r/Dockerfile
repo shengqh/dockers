@@ -2,14 +2,6 @@ FROM ubuntu:16.04
 
 RUN mkdir /scratch /data 
 
-ARG R_VERSION
-ARG BUILD_DATE
-ENV BUILD_DATE ${BUILD_DATE:-2019-06-20}
-ENV R_VERSION=${R_VERSION:-3.6.0} \
-    LC_ALL=en_US.UTF-8 \
-    LANG=en_US.UTF-8 \
-    TERM=linux
-
 RUN apt-get update
 RUN apt-get install -y apt-transport-https ca-certificates
 
