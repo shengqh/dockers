@@ -30,7 +30,4 @@ RUN pip install --no-cache-dir --upgrade \
         pandas \
         pytest
 
-RUN R -e "install.packages(c(\"optparse\", \"rmarkdown\", \"knitr\", \"pscl\", \"gridExtra\"))"
-RUN R -e "if (!requireNamespace(\"BiocManager\", quietly = TRUE)) install.packages(\"BiocManager\")"
-RUN R -e "BiocManager::install(\"GenomicRanges\")"
 
