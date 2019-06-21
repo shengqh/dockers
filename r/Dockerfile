@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 RUN mkdir /scratch /data 
 
 RUN apt-get update
-RUN apt-get install -y apt-transport-https ca-certificates libxml2-dev libcurl4-openssl-dev
+RUN apt-get install -y apt-transport-https ca-certificates libxml2-dev libcurl4-openssl-dev apt-utils
 
 RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu xenial-cran35/ " >> /etc/apt/sources.list
 RUN more /etc/apt/sources.list
