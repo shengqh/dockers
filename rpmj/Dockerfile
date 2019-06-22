@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo:mono
+FROM shengqh/bioinfo:mono5.20
 
 RUN apt-get install -y default-jre 
 
