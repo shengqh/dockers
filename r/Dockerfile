@@ -33,4 +33,6 @@ RUN R -e "BiocManager::install(\"GenomicRanges\")"
 RUN R -e "BiocManager::install(\"DESeq2\")"
 RUN R -e "BiocManager::install(ask=F)"
 
+RUN apt-get install -y git 
+
 RUN R --version
