@@ -1,37 +1,31 @@
-FROM shengqh/bioinfo:r_python_mono_jre
+FROM shengqh/bioinfo:base
 
-ARG FASTQC_VERSION="v0.11.8"
+ARG STAR_VERSION="2.7.1a"
 RUN cd /opt; \
-    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_${FASTQC_VERSION}.zip; \
-    unzip fastqc_${FASTQC_VERSION}.zip; \
-    rm fastqc_${FASTQC_VERSION}.zip; \
-    chmod 755 FastQC/fastqc;
-ENV PATH=$PATH:/opt/FastQC
-
-RUN fastqc --version                                                                                                                                                                                                                                                                         
-RUN pip install cutadapt
-
-RUN cutadapt --version
-
-RUN apt-get install -y rna-star
+    wget https://github.com/alexdobin/STAR/archive/${STAR_VERSION}.tar.gz; \
+    tar -xzf ${STAR_VERSION}.tar.gz; \
+    cd STAR-${STAR_VERSION}/source; \
+    make STAR; \
+    cp STAR /usr/local/bin; \
+    cd ../..; \
+    rm -rf STAR-${STAR_VERSION} ${STAR_VERSION}.tar.gz
 
 RUN STAR --version
 
-RUN pip install multiqc
-
-RUN multiqc --version
-
-RUN apt-get install -y subread
+ARG SUBREAD_VERSION="1.6.4"
+RUN cd /opt; \
+    wget -O subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-${SUBREAD_VERSION}/subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz/download; \
+    tar -xzvf subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz; \
+    rm subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz;
+ENV PATH=$PATH:/opt/subread-${SUBREAD_VERSION}-Linux-x86_64/bin
 
 RUN featureCounts -v
 
-ARG CQSTOOLS_VERSION="1.8.1"  
-RUN apt-get install -y unzip
-RUN cd /opt; \
-    wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
-    unzip cqstools.${CQSTOOLS_VERSION}.zip; \
-    rm cqstools.${CQSTOOLS_VERSION}.zip; \
-    chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
-ENV PATH=$PATH:/opt/cqstools.${CQSTOOLS_VERSION}
+RUN R -e "library(devtools); install_github(\"shengqh/WebGestaltR\")"
 
-RUN cqstools -h
+ADD https://api.github.com/repos/shengqh/ngsperl/git/refs/heads/master version.json
+RUN cd /opt && git clone -bmaster https://github.com/shengqh/ngsperl.git
+ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+
+RUN echo $PERL5LIB
+
