@@ -27,41 +27,31 @@ RUN R -e "library(DESeq2)"
 RUN R -e "library(devtools); install_github(\"shengqh/WebGestaltR\")"
 RUN R -e "library(WebGestaltR)"
 
+ADD https://api.github.com/repos/shengqh/ngsperl/git/refs/heads/master version.json
+RUN cd /opt && git clone -bmaster https://github.com/shengqh/ngsperl.git
+ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+
+RUN echo $PERL5LIB
+
+RUN curl -L http://cpanmin.us | perl - File::Basename;
+RUN curl -L http://cpanmin.us | perl - Getopt::Long;
+RUN curl -L http://cpanmin.us | perl - Bio::SeqIO;
+
 RUN pip3 install biopython
 RUN pip3 install pysam
 
-RUN R -e "install.packages('RColorBrewer')"
-RUN R -e "library('RColorBrewer')"
-
-RUN R -e "install.packages('VennDiagram')"
-RUN R -e "library('VennDiagram')"
-
-RUN R -e "install.packages('colorRamps')"
-RUN R -e "library('colorRamps')"
-
-RUN R -e "install.packages('cowplot')"
-RUN R -e "library('cowplot')"
-
-RUN R -e "install.packages('grid')"
-RUN R -e "library('grid')"
-
-RUN R -e "install.packages('lattice')"
-RUN R -e "library('lattice')"
-
-RUN R -e "install.packages('plyr')"
-RUN R -e "library('plyr')"
-
-RUN R -e "install.packages('reshape')"
-RUN R -e "library('reshape')"
-
-RUN R -e "install.packages('scales')"
-RUN R -e "library('scales')"
+RUN R -e "install.packages('RColorBrewer', repos='http://cran.us.r-project.org')"
+RUN R -e "install.packages('VennDiagram', repos='http://cran.us.r-project.org')"
+RUN R -e "install.packages('colorRamps', repos='http://cran.us.r-project.org')"
+RUN R -e "install.packages('cowplot', repos='http://cran.us.r-project.org')"
+RUN R -e "install.packages('grid', repos='http://cran.us.r-project.org')"
+RUN R -e "install.packages('lattice', repos='http://cran.us.r-project.org')"
+RUN R -e "install.packages('plyr', repos='http://cran.us.r-project.org')"
+RUN R -e "install.packages('reshape', repos='http://cran.us.r-project.org')"
+RUN R -e "install.packages('scales', repos='http://cran.us.r-project.org')"
 
 RUN R -e "BiocManager::install('preprocessCore')"
 RUN R -e "library('preprocessCore')"
 
 RUN R -e "BiocManager::install('edgeR')"
 RUN R -e "library('edgeR')"
-
-RUN apt-get install -y curl libcurl3-dev
-RUN curl --version

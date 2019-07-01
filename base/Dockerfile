@@ -34,4 +34,17 @@ RUN cd /opt; \
     tar -xzvf sratoolkit.current-ubuntu64.tar.gz; \
     rm sratoolkit.current-ubuntu64.tar.gz; 
 ENV PATH=$PATH:/opt/sratoolkit.2.9.6-1-ubuntu64/bin
-    
+
+ADD https://api.github.com/repos/shengqh/ngsperl/git/refs/heads/master version.json
+RUN cd /opt && git clone -bmaster https://github.com/shengqh/ngsperl.git
+ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+
+RUN echo $PERL5LIB
+
+RUN apt-get install -y libgd-dev
+
+RUN curl -L http://cpanmin.us | perl - Getopt::Long;
+RUN curl -L http://cpanmin.us | perl - Bio::SeqIO;
+RUN curl -L http://cpanmin.us | perl - Algorithm::Loops;
+RUN curl -L http://cpanmin.us | perl - Hash::Merge;
+RUN curl -L http://cpanmin.us | perl - String::Util;

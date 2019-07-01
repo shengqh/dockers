@@ -1,3 +1,7 @@
+cd /home/shengq2/programs/dockers/perl
+sh build.sh
+docker push shengqh/bioinfo:perl5.22.1
+
 cd /home/shengq2/programs/dockers/r
 sh build.sh
 docker push shengqh/bioinfo:r3.6.0

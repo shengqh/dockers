@@ -1,1 +1,1 @@
-docker build -t shengqh/bioinfo:exomeseq .
+docker build -t shengqh/bioinfo:cqs-exomeseq .
