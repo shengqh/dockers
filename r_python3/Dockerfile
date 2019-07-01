@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo:r3.6.0
+FROM shengqh/bioinfo:java1.8.0_perl5.22.1_r3.6.0
 
 # ensure local python is preferred over distribution python
 ENV PATH=/usr/local/bin:$PATH

@@ -1,6 +1,7 @@
-FROM ubuntu:16.04
+#we cannot install oracle java 8 directly anymore due to oracle license change
+FROM gizmotronic/oracle-java
 
-RUN mkdir /scratch /data 
+RUN mkdir /scratch 
 
 RUN apt-get update
 RUN apt-get install -y apt-utils
@@ -14,9 +15,7 @@ RUN locale-gen en_US.UTF-8
 RUN apt-get install -y apt-transport-https ca-certificates libxml2-dev libcurl4-openssl-dev wget git pandoc
 RUN wget --version && git --version
 
-RUN apt-get install -y perl
 RUN apt-get install -y libterm-readline-gnu-perl
-RUN perl --version
 
 RUN apt-get install -y curl libcurl3-dev libssl-dev
 RUN curl --version

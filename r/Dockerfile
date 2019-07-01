@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo:perl5.22.1
+FROM shengqh/bioinfo:java1.8.0_perl5.22.1
 
 RUN cd /usr/bin && ln -s /bin/gzip gzip && ln -s /bin/tar tar
 

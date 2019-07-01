@@ -1,1 +1,1 @@
-docker build -t shengqh/bioinfo:r3.6.0_python3.7.3_jre1.8.0_mono5.20.1.19 .
+docker build -t shengqh/bioinfo:java1.8.0_perl5.22.1_r3.6.0_python3.7.3_mono5.20.1.19 .

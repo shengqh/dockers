@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo:r3.6.0_python3.7.3_jre1.8.0_mono5.20.1.19
+FROM shengqh/bioinfo:java1.8.0_perl5.22.1_r3.6.0_python3.7.3_mono5.20.1.19
 
 ARG FASTQC_VERSION="v0.11.8"
 RUN cd /opt; \
@@ -34,12 +34,6 @@ RUN cd /opt; \
     tar -xzvf sratoolkit.current-ubuntu64.tar.gz; \
     rm sratoolkit.current-ubuntu64.tar.gz; 
 ENV PATH=$PATH:/opt/sratoolkit.2.9.6-1-ubuntu64/bin
-
-ADD https://api.github.com/repos/shengqh/ngsperl/git/refs/heads/master version.json
-RUN cd /opt && git clone -bmaster https://github.com/shengqh/ngsperl.git
-ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
-
-RUN echo $PERL5LIB
 
 RUN apt-get install -y libgd-dev
 
