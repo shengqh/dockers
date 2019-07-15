@@ -63,5 +63,13 @@ RUN R -e "library('preprocessCore')"
 RUN R -e "BiocManager::install('edgeR')"
 RUN R -e "library('edgeR')"
 
-RUN apt-get install -y curl libcurl3-dev
-RUN curl --version
+RUN R -e "BiocManager::install('DT')"
+RUN R -e "library('DT')"
+
+RUN R -e "BiocManager::install('kableExtra')"
+RUN R -e "library('kableExtra')"
+
+RUN mkdir /scratch/cqs/ && mkdir /scratch/cqs/softwares/
+COPY gsea-3.0.jar /scratch/cqs/softwares/
+RUN java -cp /scratch/cqs/softwares/gsea-3.0.jar xtools.gsea.GseaPreranked -help
+

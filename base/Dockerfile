@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo:java1.8.0_perl5.22.1_r3.6.0_python3.7.3_mono5.20.1.19
+FROM shengqh/bioinfo:java1.8.0_perl5.22.1_r3.6.1_python3.7.3_mono5.20.1.19
 
 ARG FASTQC_VERSION="v0.11.8"
 RUN cd /opt; \
