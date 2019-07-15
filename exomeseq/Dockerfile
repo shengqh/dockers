@@ -50,7 +50,7 @@ ADD annovar /opt/annovar
 ENV PATH=$PATH:/opt/annovar
 
 RUN mkdir /opt/gatk
-COPY gatk3.jar gatk4.jar picard.jar /opt/gatk/
+COPY gatk3.jar picard.jar /opt/gatk/
 
 RUN apt-get install -y libssl-dev
 RUN R -e "BiocManager::install('biomaRt')"
