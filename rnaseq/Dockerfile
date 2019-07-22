@@ -17,7 +17,7 @@ RUN cd /opt; \
     wget -O subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-${SUBREAD_VERSION}/subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz/download; \
     tar -xzvf subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz; \
     rm subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz;
-ENV PATH=$PATH:/opt/subread-${SUBREAD_VERSION}-Linux-x86_64/bin
+ENV PATH=/opt/subread-${SUBREAD_VERSION}-Linux-x86_64/bin:$PATH
 
 RUN featureCounts -v
 
@@ -28,7 +28,6 @@ RUN R -e "library(devtools); install_github(\"shengqh/WebGestaltR\")"
 RUN R -e "library(WebGestaltR)"
 
 RUN pip3 install biopython
-RUN pip3 install pysam
 
 RUN R -e "install.packages('RColorBrewer')"
 RUN R -e "library('RColorBrewer')"
@@ -69,7 +68,6 @@ RUN R -e "library('DT')"
 RUN R -e "BiocManager::install('kableExtra')"
 RUN R -e "library('kableExtra')"
 
-RUN mkdir /scratch/cqs/ && mkdir /scratch/cqs/softwares/
-COPY gsea-3.0.jar /scratch/cqs/softwares/
-RUN java -cp /scratch/cqs/softwares/gsea-3.0.jar xtools.gsea.GseaPreranked -help
+COPY gsea-3.0.jar /opt/
+RUN java -cp /opt/gsea-3.0.jar xtools.gsea.GseaPreranked -help
 

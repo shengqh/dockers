@@ -32,6 +32,16 @@ sh build.sh
 docker push shengqh/bioinfo:cqs-exomeseq                                                                                                                                                                                                        
 sh simg.sh
 
+cd /home/shengq2/programs/dockers/smallRNA
+sh build.sh
+docker push shengqh/bioinfo:cqs-smallRNA                                                                                                                                                                                                       
+sh simg.sh
+
+cd /home/shengq2/programs/dockers/cqs-gatk
+sh build.sh
+docker push shengqh/bioinfo:cqs-gatk4                                                                                                                                                                                                       
+sh simg.sh
+
 cd /home/shengq2/programs/dockers/r_python2
 sh build.sh
 docker push shengqh/bioinfo:java1.8.0_perl5.22.1_r3.6.1_python2.7.12
