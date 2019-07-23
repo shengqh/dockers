@@ -21,3 +21,6 @@ RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSI
     cd .. ; \
     rm -rf samtools-${SAMTOOLS_VERSION}
 RUN samtools --version
+
+RUN R -e "BiocManager::install(c('ggpubr', 'colorRamps'))"
+RUN R -e "library(ggpubr); library(colorRamps);"
