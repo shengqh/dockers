@@ -66,3 +66,10 @@ RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSI
 RUN bcftools --version
 
 RUN pip3 install pysam
+
+RUN cd /opt; \
+    wget ftp://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/edirect.tar.gz; \
+    tar -xzvf edirect.tar.gz; \
+    rm edirect.tar.gz; \
+    ./edirect/setup.sh
+ENV PATH=/opt/edirect:$PATH
