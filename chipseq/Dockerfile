@@ -1,19 +1,51 @@
 FROM shengqh/bioinfo:base
 
-ENV BWA_VERSION="0.7.17"
-RUN wget -O bwa-${BWA_VERSION}.tar.bz2 https://sourceforge.net/projects/bio-bwa/files/bwa-${BWA_VERSION}.tar.bz2/download; \
-    tar -jxvf bwa-${BWA_VERSION}.tar.bz2 ; \
-    cd bwa-${BWA_VERSION}; \
-    make; \
-    cp bwa /usr/bin ; \
-    cd .. ; \
-    rm -rf bwa-${BWA_VERSION}
+ENV BOWTIE2_VERSION="2.3.5.1"
+ENV PATH=/opt/bowtie2-${BOWTIE2_VERSION}-linux-x86_64:$PATH
+RUN cd /opt; \
+    wget https://github.com/BenLangmead/bowtie2/releases/download/v${BOWTIE2_VERSION}/bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip; \
+    unzip bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip ; \
+    rm -rf bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip; bowtie2 --version
 
-RUN R -e "BiocManager::install(c('ComplexHeatmap', 'maftools', 'Biostrings', 'Rsamtools', 'biomaRt'))"
-RUN R -e "library('devtools'); install_github('im3sanger/dndscv'); install_github('slzhao/mafreport')"
+COPY picard.jar /opt/
 
-COPY gatk3.jar picard.jar /opt/
+RUN R -e "BiocManager::install('biomaRt'); library('biomaRt')"
+RUN R -e "BiocManager::install('stringr'); library('stringr')"
 
-RUN mkdir /opt/annovar
-ADD annovar /opt/annovar
-ENV PATH=/opt/annovar:$PATH
+RUN apt-get update
+
+RUN apt-get install -y --no-install-recommends \
+        python \
+        python-dev
+
+RUN apt-get install -y python-pip
+RUN apt-get clean
+RUN pip2 install --upgrade pip
+RUN sed -i 's/#!\/usr\/bin\/python/#!\/usr\/bin\/python2/' /usr/local/bin/pip2
+
+RUN pip2 install --no-cache-dir --upgrade \
+        future \
+        matplotlib \
+        numpy \
+        scipy \
+        pandas \
+        pytest
+
+RUN pip2 install macs2; macs2 --version
+RUN pip2 install macs; macs --version
+
+RUN rm /usr/bin/*3.5
+
+RUN R -e "BiocManager::install('DT')"
+RUN R -e "library('DT')"
+RUN R -e "BiocManager::install('VennDiagram')"
+RUN R -e "library('VennDiagram')"
+RUN R -e "BiocManager::install('DESeq2')"
+RUN R -e "library('DESeq2')"
+RUN R -e "BiocManager::install('edgeR')"
+RUN R -e "library('edgeR')"
+RUN R -e "BiocManager::install('ChIPQC')"
+RUN R -e "library('ChIPQC')"
+RUN R -e "BiocManager::install('cowplot')"
+RUN R -e "library('cowplot')"
+
