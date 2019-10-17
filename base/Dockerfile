@@ -27,12 +27,12 @@ ENV PATH=/opt/sratoolkit.2.9.6-1-ubuntu64/bin:$PATH
 RUN apt-get install -y libgd-dev
 
 RUN curl -L http://cpanmin.us | perl - Getopt::Long;
-RUN curl -L http://cpanmin.us | perl - Bio::SeqIO;
+RUN curl -L http://cpanmin.us | perl - --force Bio::SeqIO;
 RUN curl -L http://cpanmin.us | perl - Algorithm::Loops;
 RUN curl -L http://cpanmin.us | perl - Hash::Merge;
 RUN curl -L http://cpanmin.us | perl - String::Util;
 
-ARG CQSTOOLS_VERSION="1.8.4"  
+ARG CQSTOOLS_VERSION="1.8.5"  
 RUN apt-get install -y unzip
 RUN cd /opt; \
     wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
@@ -73,3 +73,12 @@ RUN cd /opt; \
     rm edirect.tar.gz; \
     ./edirect/setup.sh
 ENV PATH=/opt/edirect:$PATH
+
+RUN pip install --upgrade pip
+
+ENV SAMBAMBA_VERSION="0.7.0"
+RUN wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}/sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
+    gunzip sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
+    chmod 755 sambamba-${SAMBAMBA_VERSION}-linux-static ; \
+    mv sambamba-${SAMBAMBA_VERSION}-linux-static /usr/bin/sambamba
+RUN sambamba --version
