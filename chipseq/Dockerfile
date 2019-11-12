@@ -48,3 +48,11 @@ RUN R -e "BiocManager::install('cowplot')"
 RUN R -e "library('cowplot')"
 RUN R -e "BiocManager::install('shengqh/ChIPQC'); library('ChIPQC')"
 
+RUN mkdir /opt/homer; \
+    cd /opt/homer; \
+    wget http://homer.ucsd.edu/homer/configureHomer.pl; \
+    perl configureHomer.pl -install; 
+
+ENV PATH=/opt/homer/bin:$PATH
+   
+RUN R -e "BiocManager::install('ggpubr');"
