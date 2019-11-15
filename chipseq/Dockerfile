@@ -46,13 +46,18 @@ RUN R -e "BiocManager::install('edgeR')"
 RUN R -e "library('edgeR')"
 RUN R -e "BiocManager::install('cowplot')"
 RUN R -e "library('cowplot')"
-RUN R -e "BiocManager::install('shengqh/ChIPQC'); library('ChIPQC')"
+RUN R -e "BiocManager::install('shengqh/ChIPQC')"
+RUN R -e "BiocManager::install('ggpubr');"
 
 RUN mkdir /opt/homer; \
     cd /opt/homer; \
     wget http://homer.ucsd.edu/homer/configureHomer.pl; \
     perl configureHomer.pl -install; 
 
+#use a softlink so that data gets off of unwritable dirs and points to my annotation directory
+RUN rm -rf /opt/homer/data
+RUN ln -s /scratch/cqs/softwares/homer2/data /opt/homer/data
+#same with config file that tells where the data is
+RUN rm -f /opt/homer/config.txt && ln -s /scratch/cqs/softwares/homer2/config.txt /opt/homer/config.txt
+
 ENV PATH=/opt/homer/bin:$PATH
-   
-RUN R -e "BiocManager::install('ggpubr');"
