@@ -9,6 +9,6 @@ ENV PATH=/opt/pandoc-${PANDOC_VERSION}/bin:$PATH
 
 RUN pandoc --version
 
-RUN pip install git+git://github.com/shengqh/annogen.git
+RUN pip install git+https://github.com/shengqh/annogen.git
 
 RUN annogen -h

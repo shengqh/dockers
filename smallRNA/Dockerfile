@@ -33,3 +33,5 @@ RUN cd /opt; \
 ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
 
 RUN cqstools
+
+RUN apt-get install lftp

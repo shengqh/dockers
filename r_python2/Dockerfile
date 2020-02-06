@@ -11,18 +11,16 @@ RUN apt-get install -y --no-install-recommends \
         pkg-config \
         python \
         python-dev \
+        python-pip \
         rsync \
         unzip \
         zip \
         zlib1g-dev
 
-RUN apt-get install -y python-pip
-RUN apt-get clean
-
-RUN pip install --no-cache-dir --upgrade pip
+RUN pip2 install --no-cache-dir --upgrade pip
 RUN cp /usr/local/bin/pip* /usr/bin
 
-RUN pip install --no-cache-dir --upgrade \
+RUN pip2 install --no-cache-dir --upgrade \
         future \
         matplotlib \
         numpy \

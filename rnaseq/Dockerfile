@@ -1,70 +1,10 @@
 FROM shengqh/bioinfo:base
 
-ARG SUBREAD_VERSION="1.6.4"
-RUN cd /opt; \
-    wget -O subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-${SUBREAD_VERSION}/subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz/download; \
-    tar -xzvf subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz; \
-    rm subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz;
-ENV PATH=/opt/subread-${SUBREAD_VERSION}-Linux-x86_64/bin:$PATH
-
-RUN featureCounts -v
+RUN pip3 install --upgrade pip
 
 RUN pip3 install biopython
 
-RUN R -e "BiocManager::install(\"DESeq2\")"
-RUN R -e "library(DESeq2)"
-
-RUN R -e "install.packages('RColorBrewer')"
-RUN R -e "library('RColorBrewer')"
-
-RUN R -e "install.packages('VennDiagram')"
-RUN R -e "library('VennDiagram')"
-
-RUN R -e "install.packages('colorRamps')"
-RUN R -e "library('colorRamps')"
-
-RUN R -e "install.packages('cowplot')"
-RUN R -e "library('cowplot')"
-
-RUN R -e "install.packages('grid')"
-RUN R -e "library('grid')"
-
-RUN R -e "install.packages('lattice')"
-RUN R -e "library('lattice')"
-
-RUN R -e "install.packages('plyr')"
-RUN R -e "library('plyr')"
-
-RUN R -e "install.packages('reshape')"
-RUN R -e "library('reshape')"
-
-RUN R -e "install.packages('scales')"
-RUN R -e "library('scales')"
-
-RUN R -e "BiocManager::install('preprocessCore')"
-RUN R -e "library('preprocessCore')"
-
-RUN R -e "BiocManager::install('edgeR')"
-RUN R -e "library('edgeR')"
-
-RUN R -e "BiocManager::install('DT')"
-RUN R -e "library('DT')"
-
-RUN R -e "BiocManager::install('kableExtra')"
-RUN R -e "library('kableExtra')"
-
-COPY gsea-3.0.jar /opt/
-RUN java -cp /opt/gsea-3.0.jar xtools.gsea.GseaPreranked -help
-
-RUN R -e "BiocManager::install('slzhao/KEGGprofile')"
-RUN R -e "library('KEGGprofile')"
-
-ENV SAMBAMBA_VERSION="0.7.0"
-RUN wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}/sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
-    gunzip sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
-    chmod 755 sambamba-${SAMBAMBA_VERSION}-linux-static ; \
-    mv sambamba-${SAMBAMBA_VERSION}-linux-static /usr/bin/sambamba
-RUN sambamba --version
+RUN R -e "BiocManager::install(c('DESeq2', 'RColorBrewer', 'VennDiagram', 'colorRamps', 'cowplot', 'grid', 'lattice', 'plyr', 'reshape', 'scales', 'preprocessCore', 'edgeR', 'DT', 'kableExtra'))"
 
 ARG STAR_VERSION="2.7.2b"
 RUN cd /opt; \
@@ -75,7 +15,38 @@ RUN cd /opt; \
     cp STAR /usr/local/bin; \
     cd ../..; \
     rm -rf STAR-${STAR_VERSION} ${STAR_VERSION}.tar.gz
-
 RUN STAR --version
 
-RUN R -e "library(devtools); install_github(\"shengqh/WebGestaltR\")"
+RUN R -e "BiocManager::install('slzhao/KEGGprofile')"
+RUN R -e "BiocManager::install('shengqh/WebGestaltR')"
+
+COPY gsea-3.0.jar /opt/
+RUN java -cp /opt/gsea-3.0.jar xtools.gsea.GseaPreranked -help
+
+ARG SUBREAD_VERSION="1.6.4"
+RUN cd /opt; \
+    wget -O subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-${SUBREAD_VERSION}/subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz/download; \
+    tar -xzvf subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz; \
+    rm subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz;
+ENV PATH=/opt/subread-${SUBREAD_VERSION}-Linux-x86_64/bin:$PATH
+RUN featureCounts -v
+
+RUN cd /opt; \
+    git clone https://github.com/slzhao/QC3.git; \
+    chmod 755 /opt/QC3/qc3.pl
+ENV PATH=/opt/QC3:$PATH
+
+ENV SAMBAMBA_VERSION="0.7.0"
+RUN wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}/sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
+    gunzip sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
+    chmod 755 sambamba-${SAMBAMBA_VERSION}-linux-static ; \
+    mv sambamba-${SAMBAMBA_VERSION}-linux-static /usr/bin/sambamba
+RUN sambamba --version
+
+RUN wget https://data.broadinstitute.org/gsea-msigdb/gsea/software/desktop/4.0/GSEA_Linux_4.0.3.zip ; \
+    gunzip GSEA_Linux_4.0.3.zip ; \
+    rm GSEA_Linux_4.0.3.zip ;
+ENV PATH=/opt/GSEA_Linux_4.0.3:$PATH
+
+COPY gatk3.jar /opt/
+COPY picard.jar /opt/

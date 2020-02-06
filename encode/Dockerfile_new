@@ -1,0 +1,17 @@
+############################################################
+# Dockerfile for ENCODE DCC chip-seq-pipeline
+# Based on Ubuntu 18.04.3
+############################################################
+
+# Set the base image to Ubuntu 18.04.3
+FROM ubuntu:18.04
+
+MAINTAINER Jin Lee, Quanhu Sheng
+
+# To prevent time zone prompt
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install softwares from apt repo
+RUN apt-get update && apt-get install -y \
+    r-base r-base-dev \
+    && rm -rf /var/lib/apt/lists/*

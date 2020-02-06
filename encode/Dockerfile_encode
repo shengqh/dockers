@@ -1,0 +1,23 @@
+FROM shengqh/bioinfo:base
+
+RUN pip3 install --upgrade pip
+
+RUN cd /opt; git clone https://github.com/ENCODE-DCC/chip-seq-pipeline2.git
+ENV PATH=/opt/chip-seq-pipeline2/src:$PATH
+
+ENV BOWTIE2_VERSION="2.3.5.1"
+ENV PATH=/opt/bowtie2-${BOWTIE2_VERSION}-linux-x86_64:$PATH
+RUN cd /opt; \
+    wget https://github.com/BenLangmead/bowtie2/releases/download/v${BOWTIE2_VERSION}/bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip; \
+    unzip bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip ; \
+    rm -rf bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip; bowtie2 --version
+
+RUN pip3 install SAMstats
+RUN pip3 install pandas
+RUN pip3 install caper
+
+COPY head /usr/bin
+RUN chmod 755 /usr/bin/head
+RUN head --help
+
+RUN apt-get install curl && curl --version
