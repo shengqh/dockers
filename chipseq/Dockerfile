@@ -56,8 +56,8 @@ RUN mkdir /opt/homer; \
 
 #use a softlink so that data gets off of unwritable dirs and points to my annotation directory
 RUN rm -rf /opt/homer/data
-RUN ln -s /scratch/cqs/softwares/homer2/data /opt/homer/data
+RUN ln -s /scratch/cqs_share/softwares/homer2/data /opt/homer/data
 #same with config file that tells where the data is
-RUN rm -f /opt/homer/config.txt && ln -s /scratch/cqs/softwares/homer2/config.txt /opt/homer/config.txt
+RUN rm -f /opt/homer/config.txt && ln -s /scratch/cqs_share/softwares/homer2/config.txt /opt/homer/config.txt
 
 ENV PATH=/opt/homer/bin:$PATH

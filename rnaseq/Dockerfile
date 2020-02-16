@@ -43,8 +43,9 @@ RUN wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}
     mv sambamba-${SAMBAMBA_VERSION}-linux-static /usr/bin/sambamba
 RUN sambamba --version
 
-RUN wget https://data.broadinstitute.org/gsea-msigdb/gsea/software/desktop/4.0/GSEA_Linux_4.0.3.zip ; \
-    gunzip GSEA_Linux_4.0.3.zip ; \
+RUN cd /opt; \
+    wget https://data.broadinstitute.org/gsea-msigdb/gsea/software/desktop/4.0/GSEA_Linux_4.0.3.zip ; \
+    unzip GSEA_Linux_4.0.3.zip ; \
     rm GSEA_Linux_4.0.3.zip ;
 ENV PATH=/opt/GSEA_Linux_4.0.3:$PATH
 

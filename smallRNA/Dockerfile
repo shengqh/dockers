@@ -23,8 +23,10 @@ RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSI
     rm -rf samtools-${SAMTOOLS_VERSION}
 RUN samtools --version
 
-ARG CQSTOOLS_VERSION="1.8.8"  
+RUN apt-get install lftp
 RUN apt-get install -y unzip
+
+ARG CQSTOOLS_VERSION="1.8.11"  
 RUN cd /opt; \
     wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
     unzip cqstools.${CQSTOOLS_VERSION}.zip; \
@@ -33,5 +35,3 @@ RUN cd /opt; \
 ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
 
 RUN cqstools
-
-RUN apt-get install lftp
