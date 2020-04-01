@@ -15,14 +15,6 @@ RUN bowtie --version
 RUN apt-get install lftp
 RUN apt-get install -y unzip
 
-ARG CQSTOOLS_VERSION="1.8.11"  
-RUN cd /opt; \
-    wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
-    unzip cqstools.${CQSTOOLS_VERSION}.zip; \
-    rm cqstools.${CQSTOOLS_VERSION}.zip; \
-    chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
-ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
-
 RUN cqstools
 
 ARG BLAST_VERSION="2.10.0"

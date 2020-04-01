@@ -74,3 +74,11 @@ RUN wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}
     chmod 755 sambamba-${SAMBAMBA_VERSION}-linux-static ; \
     mv sambamba-${SAMBAMBA_VERSION}-linux-static /usr/bin/sambamba
 RUN sambamba --version
+
+ARG CQSTOOLS_VERSION="1.8.11"  
+RUN cd /opt; \
+    wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
+    unzip cqstools.${CQSTOOLS_VERSION}.zip; \
+    rm cqstools.${CQSTOOLS_VERSION}.zip; \
+    chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
+ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
