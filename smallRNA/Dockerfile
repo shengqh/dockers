@@ -12,17 +12,6 @@ RUN cd /opt; \
 ENV PATH=$PATH:/opt/bowtie-${BOWTIE_VERSION}-linux-x86_64
 RUN bowtie --version
 
-ENV SAMTOOLS_VERSION="1.9"
-RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
-    tar -jxvf samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
-    cd samtools-${SAMTOOLS_VERSION} ; \
-    ./configure ; \
-    make ; \
-    make install ; \
-    cd .. ; \
-    rm -rf samtools-${SAMTOOLS_VERSION}
-RUN samtools --version
-
 RUN apt-get install lftp
 RUN apt-get install -y unzip
 
@@ -35,3 +24,17 @@ RUN cd /opt; \
 ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
 
 RUN cqstools
+
+ARG BLAST_VERSION="2.10.0"
+RUN cd /opt; \
+    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; \
+    tar -xzvf ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; \
+    rm ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; 
+ENV PATH=/opt/ncbi-blast-${BLAST_VERSION}+/bin:$PATH
+
+RUN blastn -version
+
+RUN pip3 install --upgrade pip
+
+ARG SPCOUNT_VERSION="0.0.3"
+RUN pip3 install git+git://github.com/shengqh/spcount.git

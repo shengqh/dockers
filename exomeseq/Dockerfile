@@ -9,13 +9,6 @@ RUN wget http://downloads.sourceforge.net/project/bio-bwa/bwa-${BWA_VERSION}.tar
     cd .. ; \
     rm -rf bwa-${BWA_VERSION}
 
-ENV SAMBAMBA_VERSION="0.7.0"
-RUN wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}/sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
-    gunzip sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
-    chmod 755 sambamba-${SAMBAMBA_VERSION}-linux-static ; \
-    mv sambamba-${SAMBAMBA_VERSION}-linux-static /usr/bin/sambamba
-RUN sambamba --version
-
 COPY gatk3.jar picard.jar /opt/
 
 RUN mkdir /opt/annovar

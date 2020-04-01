@@ -1,4 +1,4 @@
-FROM broadinstitute/gatk:4.1.4.0
+FROM broadinstitute/gatk:4.1.6.0
 
 RUN mkdir /scratch /data
 
@@ -12,7 +12,7 @@ RUN locale-gen en_US.UTF-8
 
 RUN apt-get install -y apt-transport-https ca-certificates libxml2-dev libcurl4-openssl-dev wget git pandoc
 
-ENV BCFTOOLS_VERSION="1.9"
+ENV BCFTOOLS_VERSION="1.10"
 RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
     tar -jxvf bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
     cd bcftools-${BCFTOOLS_VERSION} ; \

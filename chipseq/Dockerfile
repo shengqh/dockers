@@ -1,6 +1,6 @@
 FROM shengqh/bioinfo:base
 
-ENV BOWTIE2_VERSION="2.3.5.1"
+ENV BOWTIE2_VERSION="2.4.1"
 ENV PATH=/opt/bowtie2-${BOWTIE2_VERSION}-linux-x86_64:$PATH
 RUN cd /opt; \
     wget https://github.com/BenLangmead/bowtie2/releases/download/v${BOWTIE2_VERSION}/bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip; \
@@ -36,18 +36,7 @@ RUN pip2 install macs; macs --version
 
 RUN rm /usr/bin/*3.5
 
-RUN R -e "BiocManager::install('DT')"
-RUN R -e "library('DT')"
-RUN R -e "BiocManager::install('VennDiagram')"
-RUN R -e "library('VennDiagram')"
-RUN R -e "BiocManager::install('DESeq2')"
-RUN R -e "library('DESeq2')"
-RUN R -e "BiocManager::install('edgeR')"
-RUN R -e "library('edgeR')"
-RUN R -e "BiocManager::install('cowplot')"
-RUN R -e "library('cowplot')"
-RUN R -e "BiocManager::install('shengqh/ChIPQC')"
-RUN R -e "BiocManager::install('ggpubr');"
+RUN R -e "BiocManager::install('DT', 'VennDiagram', 'DESeq2', 'edgeR', 'cowplot', 'shengqh/ChIPQC', 'ggpubr');"
 
 RUN mkdir /opt/homer; \
     cd /opt/homer; \
