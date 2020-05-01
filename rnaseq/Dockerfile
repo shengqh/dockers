@@ -49,3 +49,7 @@ RUN cd /opt; \
     git clone https://github.com/shengqh/ngsperl.git; \
     bash /opt/ngsperl/install_packages.sh
 ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+
+RUN R -e "BiocManager::install(c('tidyverse'))"
+RUN R -e "BiocManager::install(c('TCGAbiolinks'))"
+RUN R -e "BiocManager::install()"

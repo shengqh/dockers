@@ -31,12 +31,12 @@ RUN pip2 install --no-cache-dir --upgrade \
         pandas \
         pytest
 
-RUN pip2 install macs2; macs2 --version
+RUN pip3 install macs2; macs2 --version
 RUN pip2 install macs; macs --version
 
 RUN rm /usr/bin/*3.5
 
-RUN R -e "BiocManager::install('DT', 'VennDiagram', 'DESeq2', 'edgeR', 'cowplot', 'shengqh/ChIPQC', 'ggpubr');"
+RUN R -e "BiocManager::install(c('DT', 'VennDiagram', 'DESeq2', 'edgeR', 'cowplot', 'shengqh/ChIPQC', 'ggpubr', 'rlist'), ask=F);"
 
 RUN mkdir /opt/homer; \
     cd /opt/homer; \
@@ -44,8 +44,7 @@ RUN mkdir /opt/homer; \
     perl configureHomer.pl -install; 
 
 #use a softlink so that data gets off of unwritable dirs and points to my annotation directory
-RUN rm -rf /opt/homer/data
-RUN ln -s /scratch/cqs_share/softwares/homer2/data /opt/homer/data
+RUN rm -rf /opt/homer/data && ln -s /scratch/cqs_share/softwares/homer2/data /opt/homer/data
 #same with config file that tells where the data is
 RUN rm -f /opt/homer/config.txt && ln -s /scratch/cqs_share/softwares/homer2/config.txt /opt/homer/config.txt
 

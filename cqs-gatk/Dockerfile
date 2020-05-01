@@ -1,4 +1,4 @@
-FROM broadinstitute/gatk:4.1.6.0
+FROM broadinstitute/gatk:4.1.4.1
 
 RUN mkdir /scratch /data
 
