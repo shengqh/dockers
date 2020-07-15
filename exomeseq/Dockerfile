@@ -36,3 +36,12 @@ RUN cd /opt; \
 ENV PATH=/opt/subread-${SUBREAD_VERSION}-Linux-x86_64/bin:$PATH
 
 RUN featureCounts -v
+
+RUN apt-get install -y tabix
+
+RUN pip3 install --no-cache-dir --upgrade \
+    pysam \
+    biopython \
+    pytabix
+
+RUN R -e "BiocManager::install(c('readr', 'stringr', 'RColorBrewer', 'forcats', 'getopt', 'Cairo'))"

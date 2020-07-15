@@ -1,6 +1,7 @@
 FROM shengqh/bioinfo:java1.8.0_perl5.22.1_r3.6.1_python3.7.3_mono5.20.1.19
 
-RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade pip; \
+    pip3 install wheel
 
 ARG FASTQC_VERSION="v0.11.9"
 RUN cd /opt; \
@@ -9,15 +10,24 @@ RUN cd /opt; \
     rm fastqc_${FASTQC_VERSION}.zip; \
     chmod 755 FastQC/fastqc;
 ENV PATH=/opt/FastQC:$PATH
-
 RUN fastqc --version                                                                                                                                                                                                                                                                         
 
-RUN pip3 install cutadapt
+ARG PIGZ_VERSION="2.4"
+RUN cd /opt; \
+    wget https://zlib.net/pigz/pigz-${PIGZ_VERSION}.tar.gz ; \
+    tar -xzvf pigz-${PIGZ_VERSION}.tar.gz; \
+    rm pigz-${PIGZ_VERSION}.tar.gz; \
+    cd pigz-${PIGZ_VERSION}; \
+    make; \
+    mv pigz unpigz /usr/bin; \
+    cd ..; \
+    rm -rf pigz-${PIGZ_VERSION}
+RUN pigz -h
 
+RUN pip3 install cutadapt
 RUN cutadapt --version
 
 RUN pip3 install multiqc
-
 RUN multiqc --version
 
 RUN cd /opt; \
@@ -47,7 +57,7 @@ RUN cd /opt; \
     rm -rf samtools-${SAMTOOLS_VERSION}
 RUN samtools --version
 
-ENV BCFTOOLS_VERSION="1.10"
+ENV BCFTOOLS_VERSION="1.10.2"
 RUN cd /opt; \
     wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
     tar -jxvf bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
@@ -82,3 +92,4 @@ RUN cd /opt; \
     rm cqstools.${CQSTOOLS_VERSION}.zip; \
     chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
 ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
+
