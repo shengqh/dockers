@@ -26,6 +26,6 @@ RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSI
     make ; \
     make install ; \
     cd .. ; \
-    rm -rf bcftools-${BCFTOOLS_VERSION}
+    rm -rf bcftools-${BCFTOOLS_VERSION}.tar.bz2 bcftools-${BCFTOOLS_VERSION}
 RUN bcftools --version
 
