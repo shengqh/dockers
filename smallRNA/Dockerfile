@@ -4,7 +4,7 @@ RUN R -e "BiocManager::install(c('DESeq2', 'VennDiagram', 'edgeR', 'DT', 'cowplo
 RUN R -e "BiocManager::install(c('ggpubr', 'colorRamps'))"
 RUN R -e "BiocManager::install(ask=F)"
 
-ARG BOWTIE_VERSION="1.2.3"
+ARG BOWTIE_VERSION="1.3.0"
 RUN cd /opt; \
     wget https://github.com/BenLangmead/bowtie/releases/download/v${BOWTIE_VERSION}/bowtie-${BOWTIE_VERSION}-linux-x86_64.zip; \
     unzip bowtie-${BOWTIE_VERSION}-linux-x86_64.zip; \
@@ -30,3 +30,8 @@ RUN pip3 install --upgrade pip
 
 ARG SPCOUNT_VERSION="0.0.3"
 RUN pip3 install git+git://github.com/shengqh/spcount.git
+
+RUN pip3 install --no-cache-dir --upgrade \
+    pysam \
+    biopython \
+    pytabix

@@ -9,6 +9,7 @@ RUN cd /opt; \
 
 COPY picard.jar /opt/
 
+RUN R -e "install.packages('XML', repos='http://www.omegahat.net/R'); library('XML')"
 RUN R -e "BiocManager::install('biomaRt'); library('biomaRt')"
 RUN R -e "BiocManager::install('stringr'); library('stringr')"
 
@@ -49,3 +50,12 @@ RUN rm -rf /opt/homer/data && ln -s /scratch/cqs_share/softwares/homer2/data /op
 RUN rm -f /opt/homer/config.txt && ln -s /scratch/cqs_share/softwares/homer2/config.txt /opt/homer/config.txt
 
 ENV PATH=/opt/homer/bin:$PATH
+
+ENV BWA_VERSION="0.7.17"
+RUN wget http://downloads.sourceforge.net/project/bio-bwa/bwa-${BWA_VERSION}.tar.bz2; \
+    tar -jxvf bwa-${BWA_VERSION}.tar.bz2 ; \
+    cd bwa-${BWA_VERSION}; \
+    make; \
+    cp bwa /usr/bin ; \
+    cd .. ; \
+    rm -rf bwa-${BWA_VERSION}
