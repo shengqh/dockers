@@ -17,9 +17,9 @@ RUN apt-get install -y unzip
 
 RUN cqstools
 
-ARG BLAST_VERSION="2.10.0"
+ARG BLAST_VERSION="2.10.1"
 RUN cd /opt; \
-    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; \
+    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLAST_VERSION}/ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; \
     tar -xzvf ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; \
     rm ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; 
 ENV PATH=/opt/ncbi-blast-${BLAST_VERSION}+/bin:$PATH
@@ -35,3 +35,5 @@ RUN pip3 install --no-cache-dir --upgrade \
     pysam \
     biopython \
     pytabix
+
+ENV PATH=/opt/sratoolkit.2.10.8-ubuntu64/bin:$PATH
