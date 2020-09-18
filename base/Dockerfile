@@ -3,14 +3,8 @@ FROM shengqh/bioinfo:java1.8.0_perl5.22.1_r3.6.1_python3.7.3_mono5.20.1.19
 RUN pip3 install --upgrade pip; \
     pip3 install wheel
 
-ARG FASTQC_VERSION="v0.11.9"
-RUN cd /opt; \
-    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_${FASTQC_VERSION}.zip; \
-    unzip fastqc_${FASTQC_VERSION}.zip; \
-    rm fastqc_${FASTQC_VERSION}.zip; \
-    chmod 755 FastQC/fastqc;
-ENV PATH=/opt/FastQC:$PATH
-RUN fastqc --version                                                                                                                                                                                                                                                                         
+RUN apt-get update
+RUN apt-get install -y libgd-dev
 
 ARG PIGZ_VERSION="2.4"
 RUN cd /opt; \
@@ -30,14 +24,10 @@ RUN cutadapt --version
 RUN pip3 install multiqc
 RUN multiqc --version
 
-RUN cd /opt; \
-    wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz; \
-    tar -xzvf sratoolkit.current-ubuntu64.tar.gz; \
-    rm sratoolkit.current-ubuntu64.tar.gz; 
-ENV PATH=/opt/sratoolkit.2.10.4-ubuntu64/bin:$PATH
-
-RUN apt-get update
-RUN apt-get install -y libgd-dev
+RUN pip3 install --no-cache-dir --upgrade \
+    pysam \
+    biopython \
+    pytabix
 
 RUN curl -L http://cpanmin.us | perl - Getopt::Long;
 RUN curl -L http://cpanmin.us | perl - --force Bio::SeqIO;
@@ -69,16 +59,16 @@ RUN cd /opt; \
     rm -rf bcftools-${BCFTOOLS_VERSION}
 RUN bcftools --version
 
-RUN pip3 install pysam
-
+ARG FASTQC_VERSION="v0.11.9"
 RUN cd /opt; \
-    wget ftp://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/edirect.tar.gz; \
-    tar -xzvf edirect.tar.gz; \
-    rm edirect.tar.gz; \
-    ./edirect/setup.sh
-ENV PATH=/opt/edirect:$PATH
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_${FASTQC_VERSION}.zip; \
+    unzip fastqc_${FASTQC_VERSION}.zip; \
+    rm fastqc_${FASTQC_VERSION}.zip; \
+    chmod 755 FastQC/fastqc;
+ENV PATH=/opt/FastQC:$PATH
+RUN fastqc --version                                                                                                                                                                                                                                                                         
 
-ENV SAMBAMBA_VERSION="0.7.1"
+ARG SAMBAMBA_VERSION="0.7.1"
 RUN wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}/sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
     gunzip sambamba-${SAMBAMBA_VERSION}-linux-static.gz ; \
     chmod 755 sambamba-${SAMBAMBA_VERSION}-linux-static ; \
@@ -93,3 +83,16 @@ RUN cd /opt; \
     chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
 ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
 
+RUN cd /opt; \
+    wget ftp://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/edirect.tar.gz; \
+    tar -xzvf edirect.tar.gz; \
+    rm edirect.tar.gz; \
+    ./edirect/setup.sh
+ENV PATH=/opt/edirect:$PATH
+
+ARG sratoolkit_VERSION="2.10.8"
+RUN cd /opt; \
+    wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/${sratoolkit_VERSION}/sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
+    tar -xzvf sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
+    rm sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; 
+ENV PATH=/opt/sratoolkit.${sratoolkit_VERSION}-ubuntu64/bin:$PATH
