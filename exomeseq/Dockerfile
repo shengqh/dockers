@@ -18,10 +18,6 @@ ENV PATH=/opt/annovar:$PATH
 RUN R -e "BiocManager::install(c('Biostrings', 'Rsamtools', 'biomaRt', 'VennDiagram', 'cowplot'))"
 RUN R -e "BiocManager::install('mclust')"
 RUN R -e "BiocManager::install(ask=FALSE)"
-RUN R -e "BiocManager::install('PoisonAlien/maftools')"
-RUN R -e "BiocManager::install('im3sanger/dndscv')"
-RUN R -e "BiocManager::install('slzhao/mafreport')"
-RUN R -e "BiocManager::install('jokergoo/ComplexHeatmap')"
 
 ENV Vcfanno_VERSION="0.3.2"
 RUN wget https://github.com/brentp/vcfanno/releases/download/v${Vcfanno_VERSION}/vcfanno_linux64 ; \
@@ -45,3 +41,6 @@ RUN pip3 install --no-cache-dir --upgrade \
     pytabix
 
 RUN R -e "BiocManager::install(c('readr', 'stringr', 'RColorBrewer', 'forcats', 'getopt', 'Cairo'))"
+RUN R -e "BiocManager::install('pheatmap')"
+RUN R -e "BiocManager::install('R.utils')"
+RUN R -e "BiocManager::install('dendextend')"
