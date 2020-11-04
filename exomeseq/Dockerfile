@@ -15,31 +15,21 @@ RUN mkdir /opt/annovar
 ADD annovar /opt/annovar
 ENV PATH=/opt/annovar:$PATH
 
-RUN R -e "BiocManager::install(c('Biostrings', 'Rsamtools', 'biomaRt', 'VennDiagram', 'cowplot'))"
-RUN R -e "BiocManager::install('mclust')"
-RUN R -e "BiocManager::install(ask=FALSE)"
-
 ENV Vcfanno_VERSION="0.3.2"
 RUN wget https://github.com/brentp/vcfanno/releases/download/v${Vcfanno_VERSION}/vcfanno_linux64 ; \
     chmod 755 vcfanno_linux64 ; \
     mv vcfanno_linux64 /usr/bin/vcfanno
 
-ARG SUBREAD_VERSION="2.0.0"
+ARG SUBREAD_VERSION="2.0.1"
 RUN cd /opt; \
     wget -O subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-${SUBREAD_VERSION}/subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz/download; \
     tar -xzvf subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz; \
-    rm subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz;
+    rm subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz
 ENV PATH=/opt/subread-${SUBREAD_VERSION}-Linux-x86_64/bin:$PATH
 
-RUN featureCounts -v
-
-RUN apt-get install -y tabix
-
-RUN pip3 install --no-cache-dir --upgrade \
-    pysam \
-    biopython \
-    pytabix
-
+RUN R -e "BiocManager::install(ask=FALSE)"
+RUN R -e "BiocManager::install(c('Biostrings', 'Rsamtools', 'biomaRt', 'VennDiagram', 'cowplot'))"
+RUN R -e "BiocManager::install('mclust')"
 RUN R -e "BiocManager::install(c('readr', 'stringr', 'RColorBrewer', 'forcats', 'getopt', 'Cairo'))"
 RUN R -e "BiocManager::install('pheatmap')"
 RUN R -e "BiocManager::install('R.utils')"
