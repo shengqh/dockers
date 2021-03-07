@@ -3,8 +3,10 @@ FROM r-base:4.0.4
 RUN mkdir /scratch
 RUN mkdir /data
 
-RUN R -e "install.packages('BiocManager')"
 RUN R -e "Sys.setenv('R_REMOTES_NO_ERRORS_FROM_WARNINGS' = 'true')"
+RUN R -e "if('BiocManager' %in% rownames(installed.packages()) == FALSE) {install.packages('BiocManager', update=FALSE, ask=FALSE, dependencies=TRUE)}"
+RUN R -e "if('hdf5r' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('hdf5r', update=FALSE, ask=FALSE, dependencies=TRUE)}"
+RUN R -e "if('remotes' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('remotes', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('BiocParallel' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('BiocParallel', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('DESeq2' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('DESeq2', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('MatrixEQTL' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('MatrixEQTL', update=FALSE, ask=FALSE, dependencies=TRUE)}"
@@ -89,5 +91,3 @@ RUN R -e "if('scales' %in% rownames(installed.packages()) == FALSE) {BiocManager
 RUN R -e "if('stringr' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('stringr', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('tidyverse' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('tidyverse', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('zoo' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('zoo', update=FALSE, ask=FALSE, dependencies=TRUE)}"
-RUN R -e "if('hdf5r' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('hdf5r', update=FALSE, ask=FALSE, dependencies=TRUE)}"
-RUN R -e "if('remotes' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('remotes', update=FALSE, ask=FALSE, dependencies=TRUE)}"
