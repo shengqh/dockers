@@ -59,3 +59,5 @@ RUN wget http://downloads.sourceforge.net/project/bio-bwa/bwa-${BWA_VERSION}.tar
     cp bwa /usr/bin ; \
     cd .. ; \
     rm -rf bwa-${BWA_VERSION}
+
+RUN R -e "BiocManager::install('TxDb.Hsapiens.UCSC.hg38.knownGene'); library('TxDb.Hsapiens.UCSC.hg38.knownGene')"

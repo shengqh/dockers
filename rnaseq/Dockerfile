@@ -17,6 +17,7 @@ RUN cd /opt; \
     rm -rf STAR-${STAR_VERSION} ${STAR_VERSION}.tar.gz
 RUN STAR --version
 
+RUN R -e "BiocManager::install('remotes')"
 RUN R -e "BiocManager::install('slzhao/KEGGprofile')"
 
 COPY gsea-3.0.jar /opt/
@@ -55,5 +56,10 @@ RUN R -e "BiocManager::install()"
 ENV NGSPERL_VERSION="20200930"
 RUN cd /opt; \
     git clone https://github.com/shengqh/ngsperl.git; \
-    bash /opt/ngsperl/install_packages.sh
+    bash /opt/ngsperl/install_packages_nosudo.sh
 ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+
+RUN R -e "BiocManager::install(c('tidyverse'))"
+RUN R -e "BiocManager::install(c('TCGAbiolinks'))"
+RUN R -e "BiocManager::install()"
+

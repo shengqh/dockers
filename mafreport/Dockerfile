@@ -15,7 +15,7 @@ RUN apt-get update
 RUN apt-get install -y curl
 RUN apt-get install -y libcurl4-openssl-dev
 
-RUN R -e "BiocManager::install('im3sanger/dndscv', ask=F)"
+RUN R -e "BiocManager::install('im3sanger/dndscv', ask=F)" 
 RUN R -e "BiocManager::install('jokergoo/ComplexHeatmap', ask=F)"
 
 RUN apt-get install -y libssl-dev

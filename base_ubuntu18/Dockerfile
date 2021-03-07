@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo:ubuntu20.04_r4.0_java1.8_perl5.30_mono6.12_python3.8
+FROM shengqh/bioinfo:ubuntu18.04_r4.0_java1.8_perl5.26_mono6.12_python3.9
 
 RUN pip3 install --upgrade pip; \
     pip3 install wheel
@@ -97,8 +97,6 @@ RUN cd /opt; \
     rm sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; 
 ENV PATH=/opt/sratoolkit.${sratoolkit_VERSION}-ubuntu64/bin:$PATH
 
-RUN mkdir /workspace
-RUN mkdir /data1
 RUN apt-get install -y tabix
 
 RUN Rscript --slave --no-save --no-restore-history -e 'install.packages("BiocManager");BiocManager::install(version="3.12")'
