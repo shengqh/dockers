@@ -40,7 +40,11 @@ RUN pip3 install --no-cache-dir --upgrade \
     biopython \
     pytabix
 
-RUN R -e "BiocManager::install(c('readr', 'stringr', 'RColorBrewer', 'forcats', 'getopt', 'Cairo'))"
-RUN R -e "BiocManager::install('pheatmap')"
-RUN R -e "BiocManager::install('R.utils')"
-RUN R -e "BiocManager::install('dendextend')"
+RUN R -e "BiocManager::install('readr');library('readr')"
+RUN R -e "BiocManager::install('stringr');library('stringr')"
+RUN R -e "BiocManager::install('RColorBrewer');library('RColorBrewer')"
+RUN R -e "BiocManager::install('forcats');library('forcats')"
+RUN R -e "BiocManager::install('getopt');library('getopt')"
+RUN R -e "BiocManager::install('pheatmap');library('pheatmap')"
+RUN R -e "BiocManager::install('R.utils');library('R.utils')"
+RUN R -e "BiocManager::install('dendextend');library('dendextend')"
