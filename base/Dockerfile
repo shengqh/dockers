@@ -96,3 +96,6 @@ RUN cd /opt; \
     tar -xzvf sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
     rm sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; 
 ENV PATH=/opt/sratoolkit.${sratoolkit_VERSION}-ubuntu64/bin:$PATH
+
+RUN mkdir /workspace
+RUN mkdir /data1
