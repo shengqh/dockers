@@ -29,3 +29,15 @@ RUN R -e "BiocManager::install('slzhao/mafreport', ask=F)"
 
 RUN apt-get install -y pandoc
 
+RUN R -e "BiocManager::install('R.utils')"
+RUN R -e "BiocManager::install('wordcloud')"
+
+RUN apt-get install -y libxml2-dev
+RUN R -e "BiocManager::install('devtools')"
+
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+
+RUN cd /usr/bin; ln -s python3 python
+
+RUN R -e "BiocManager::install('mclust')"
