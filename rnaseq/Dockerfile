@@ -44,12 +44,16 @@ ENV PATH=/opt/GSEA_Linux_4.0.3:$PATH
 COPY gatk3.jar /opt/
 COPY picard.jar /opt/
 
-ENV NGSPERL_VERSION="20200330"
+RUN R -e "BiocManager::install(c('tidyverse'))"
+RUN R -e "BiocManager::install(c('TCGAbiolinks'))"
+
+RUN apt-get update && apt-get install -y libcairo2-dev
+RUN R -e "BiocManager::install('WebGestaltR')"
+
+RUN R -e "BiocManager::install()"
+
+ENV NGSPERL_VERSION="20200930"
 RUN cd /opt; \
     git clone https://github.com/shengqh/ngsperl.git; \
     bash /opt/ngsperl/install_packages.sh
 ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
-
-RUN R -e "BiocManager::install(c('tidyverse'))"
-RUN R -e "BiocManager::install(c('TCGAbiolinks'))"
-RUN R -e "BiocManager::install()"
