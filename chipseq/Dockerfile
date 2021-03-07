@@ -19,10 +19,8 @@ RUN apt-get install -y --no-install-recommends \
         python \
         python-dev
 
-RUN apt-get install -y python-pip
-RUN apt-get clean
-RUN pip2 install --upgrade pip
-RUN sed -i 's/#!\/usr\/bin\/python/#!\/usr\/bin\/python2/' /usr/local/bin/pip2
+RUN wget https://bootstrap.pypa.io/get-pip.py; \
+    python2 get-pip.py
 
 RUN pip2 install --no-cache-dir --upgrade \
         future \
@@ -32,12 +30,19 @@ RUN pip2 install --no-cache-dir --upgrade \
         pandas \
         pytest
 
-RUN pip3 install macs2; macs2 --version
+#RUN sed -i 's/#!\/usr\/bin\/python/#!\/usr\/bin\/python2/' /usr/local/bin/pip2
+
 RUN pip2 install macs; macs --version
 
-RUN rm /usr/bin/*3.5
+RUN wget https://bootstrap.pypa.io/get-pip.py; python3 get-pip.py; pip3 --version
+RUN pip3 install macs2; macs2 --version
 
-RUN R -e "BiocManager::install(c('DT', 'VennDiagram', 'DESeq2', 'edgeR', 'cowplot', 'shengqh/ChIPQC', 'ggpubr', 'rlist'), ask=F);"
+RUN R -e "BiocManager::install(c('DT', 'VennDiagram'), ask=F);"
+RUN R -e "BiocManager::install(c('DESeq2', 'edgeR'), ask=F);"
+RUN R -e "BiocManager::install(c('cowplot'), ask=F);"
+RUN R -e "BiocManager::install(c('ggpubr', 'rlist'), ask=F);"
+RUN R -e "BiocManager::install(c('remotes'), ask=F);"
+RUN R -e "BiocManager::install(c('devtools'), ask=F);"
 
 RUN mkdir /opt/homer; \
     cd /opt/homer; \
@@ -61,3 +66,12 @@ RUN wget http://downloads.sourceforge.net/project/bio-bwa/bwa-${BWA_VERSION}.tar
     rm -rf bwa-${BWA_VERSION}
 
 RUN R -e "BiocManager::install('TxDb.Hsapiens.UCSC.hg38.knownGene'); library('TxDb.Hsapiens.UCSC.hg38.knownGene')"
+RUN R -e "BiocManager::install('kableExtra'); library('kableExtra')"
+
+RUN apt-get install -y libv8-dev
+RUN apt-get install -y librsvg2-dev
+#RUN R -e 'library(devtools);install_github("shengqh/ChIPQC")'
+RUN R -e "BiocManager::install(c('shengqh/ChIPQC'), ask=F);"
+
+RUN R -e "BiocManager::install('tidyverse'); library('tidyverse')"
+

@@ -22,7 +22,7 @@ RUN R -e "if('rmarkdown' %in% rownames(installed.packages()) == FALSE) {BiocMana
 RUN R -e "if('scales' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('scales', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('wordcloud' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('wordcloud', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('rmarkdown' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('rmarkdown', update=FALSE, ask=FALSE, dependencies=TRUE)}"
-RUN R -e "if('shengqh/ChIPQC' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('shengqh/ChIPQC', update=FALSE, ask=FALSE, dependencies=TRUE)}"
+#RUN R -e "if('shengqh/ChIPQC' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('shengqh/ChIPQC', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('ChIPpeakAnno' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('ChIPpeakAnno', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('ComplexHeatmap' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('ComplexHeatmap', update=FALSE, ask=FALSE, dependencies=TRUE)}"
 RUN R -e "if('DESeq2' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('DESeq2', update=FALSE, ask=FALSE, dependencies=TRUE)}"
