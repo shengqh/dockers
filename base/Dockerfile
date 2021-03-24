@@ -102,3 +102,5 @@ RUN mkdir /data1
 RUN apt-get install -y tabix
 
 RUN Rscript --slave --no-save --no-restore-history -e 'install.packages("BiocManager");BiocManager::install(version="3.12")'
+
+RUN sed -i 's/250/5000/g' /opt/FastQC/fastqc
