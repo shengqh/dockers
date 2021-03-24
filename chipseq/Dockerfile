@@ -19,7 +19,7 @@ RUN apt-get install -y --no-install-recommends \
         python \
         python-dev
 
-RUN wget https://bootstrap.pypa.io/get-pip.py; \
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py; \
     python2 get-pip.py
 
 RUN pip2 install --no-cache-dir --upgrade \
@@ -70,8 +70,16 @@ RUN R -e "BiocManager::install('kableExtra'); library('kableExtra')"
 
 RUN apt-get install -y libv8-dev
 RUN apt-get install -y librsvg2-dev
-#RUN R -e 'library(devtools);install_github("shengqh/ChIPQC")'
-RUN R -e "BiocManager::install(c('shengqh/ChIPQC'), ask=F);"
 
 RUN R -e "BiocManager::install('tidyverse'); library('tidyverse')"
 
+RUN apt-get install -y imagemagick
+RUN apt-get install -y libgit2-dev
+
+RUN R -e 'install.packages("devtools");library(devtools)'
+
+RUN R -e 'library(devtools);install_github("shengqh/ChIPQC")'
+ENV ChIPQC_VERSION="v20210323"
+RUN R -e 'library(devtools);install_github("shengqh/ChIPQC")'
+
+RUN sed -i 's/250/5000/g' /opt/FastQC/fastqc
