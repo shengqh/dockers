@@ -79,7 +79,12 @@ RUN apt-get install -y libgit2-dev
 RUN R -e 'install.packages("devtools");library(devtools)'
 
 RUN R -e 'library(devtools);install_github("shengqh/ChIPQC")'
-ENV ChIPQC_VERSION="v20210323"
-RUN R -e 'library(devtools);install_github("shengqh/ChIPQC")'
 
 RUN sed -i 's/250/5000/g' /opt/FastQC/fastqc
+
+RUN R -e "BiocManager::install('DiffBind', ask=F); library('DiffBind')"
+
+ENV ChIPQC_VERSION="v20210325"
+RUN R -e 'library(devtools);install_github("shengqh/ChIPQC")'
+
+RUN pip3 install pysam

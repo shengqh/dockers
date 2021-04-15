@@ -23,4 +23,7 @@ RUN apt-get install -y texlive-latex-extra
 
 RUN R -e "BiocManager::install('ggplot2', ask=F);library(ggplot2);"
 RUN R -e "BiocManager::install('gplots', ask=F);library(gplots);"
+RUN R -e "BiocManager::install('MAGeCKFlute', ask=F);library(MAGeCKFlute);"
+RUN R -e "BiocManager::install('sva', ask=F);library(sva);"
 
+ 
