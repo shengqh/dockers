@@ -24,5 +24,6 @@ RUN R -e "install.packages('ggpubr');library('ggpubr')"
 RUN R -e "install.packages('heatmap3');library('heatmap3')"
 
 RUN R -e "BiocManager::install('limma');library('limma')"
+RUN R -e "BiocManager::install('CHETAH');library('CHETAH')"
 
 
