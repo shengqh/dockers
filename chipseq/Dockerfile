@@ -88,3 +88,9 @@ ENV ChIPQC_VERSION="v20210325"
 RUN R -e 'library(devtools);install_github("shengqh/ChIPQC")'
 
 RUN pip3 install pysam
+
+RUN R -e "BiocManager::install('Homo.sapiens'); library('Homo.sapiens')"
+RUN R -e "BiocManager::install('GenomicRanges'); library('GenomicRanges')"
+RUN R -e "BiocManager::install('biovizBase'); library('biovizBase')"
+RUN R -e "BiocManager::install('cowplot'); library('cowplot')"
+RUN R -e "BiocManager::install('ggbio'); library('ggbio')"
