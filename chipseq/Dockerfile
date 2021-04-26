@@ -95,3 +95,6 @@ RUN R -e "BiocManager::install('biovizBase'); library('biovizBase')"
 RUN R -e "BiocManager::install('cowplot'); library('cowplot')"
 RUN R -e "BiocManager::install('ggbio'); library('ggbio')"
 RUN R -e "BiocManager::install('ChIPpeakAnno'); library('ChIPpeakAnno')"
+
+#allow converting pdf to png
+RUN sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xml   
