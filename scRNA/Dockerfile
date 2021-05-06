@@ -25,5 +25,6 @@ RUN R -e "install.packages('heatmap3');library('heatmap3')"
 
 RUN R -e "BiocManager::install('limma');library('limma')"
 RUN R -e "BiocManager::install('CHETAH');library('CHETAH')"
+RUN R -e "install.packages('SignacX');library('SignacX')"
 
-
+RUN R -e "BiocManager::install('liuqivandy/scRNABatchQC');library('scRNABatchQC')"
