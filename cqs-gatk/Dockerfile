@@ -1,7 +1,5 @@
 FROM broadinstitute/gatk:4.1.8.1
 
-RUN mkdir /scratch /data
-
 RUN apt-get update
 RUN apt-get install -y apt-utils locales
 
@@ -28,4 +26,3 @@ RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSI
     cd .. ; \
     rm -rf bcftools-${BCFTOOLS_VERSION}.tar.bz2 bcftools-${BCFTOOLS_VERSION}
 RUN bcftools --version
-
