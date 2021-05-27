@@ -28,3 +28,10 @@ RUN R -e "BiocManager::install('CHETAH');library('CHETAH')"
 RUN R -e "install.packages('SignacX');library('SignacX')"
 
 RUN R -e "BiocManager::install('liuqivandy/scRNABatchQC');library('scRNABatchQC')"
+RUN R -e "BiocManager::install('edgeR');library('edgeR')"
+
+RUN R -e "BiocManager::install('immunogenomics/harmony');library('harmony')"
+RUN R -e "BiocManager::install('Rcpp');library('Rcpp')"
+RUN R -e "BiocManager::install(ask=FALSE)"
+#RUN R -e "BiocManager::install('satijalab/seurat');library('seurat')"
+
