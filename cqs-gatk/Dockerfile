@@ -1,6 +1,6 @@
-FROM broadinstitute/gatk:4.1.8.1
+FROM broadinstitute/gatk:4.2.0.0
 
-RUN mkdir /scratch /data
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
 RUN apt-get update
 RUN apt-get install -y apt-utils locales
@@ -18,7 +18,7 @@ RUN apt-get install -y ca-certificates
 RUN apt-get install -y wget git pandoc 
 RUN apt-get install -y liblzma-dev 
 
-ENV BCFTOOLS_VERSION="1.10.2"
+ENV BCFTOOLS_VERSION="1.12"
 RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
     tar -jxvf bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
     cd bcftools-${BCFTOOLS_VERSION} ; \
