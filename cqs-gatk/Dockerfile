@@ -28,4 +28,3 @@ RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSI
     cd .. ; \
     rm -rf bcftools-${BCFTOOLS_VERSION}.tar.bz2 bcftools-${BCFTOOLS_VERSION}
 RUN bcftools --version
-
