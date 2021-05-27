@@ -20,7 +20,7 @@ RUN wget https://github.com/brentp/vcfanno/releases/download/v${Vcfanno_VERSION}
     chmod 755 vcfanno_linux64 ; \
     mv vcfanno_linux64 /usr/bin/vcfanno
 
-ARG SUBREAD_VERSION="2.0.1"
+ARG SUBREAD_VERSION="2.0.2"
 RUN cd /opt; \
     wget -O subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-${SUBREAD_VERSION}/subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz/download; \
     tar -xzvf subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz; \
@@ -46,4 +46,6 @@ RUN R -e "BiocManager::install('pheatmap');library('pheatmap')"
 RUN R -e "BiocManager::install('R.utils');library('R.utils')"
 RUN R -e "BiocManager::install('dendextend');library('dendextend')"
 RUN R -e "BiocManager::install(c('Biostrings', 'Rsamtools', 'biomaRt', 'VennDiagram', 'cowplot'))"
-RUN R -e "BiocManager::install('mclust')"
+RUN R -e "BiocManager::install('mclust');library('mclust')"
+
+RUN R -e "BiocManager::install('ComplexHeatmap');library('ComplexHeatmap')"
