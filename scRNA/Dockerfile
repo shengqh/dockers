@@ -35,3 +35,4 @@ RUN R -e "BiocManager::install('Rcpp');library('Rcpp')"
 RUN R -e "BiocManager::install(ask=FALSE)"
 #RUN R -e "BiocManager::install('satijalab/seurat');library('seurat')"
 
+RUN pip3 install cna
