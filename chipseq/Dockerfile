@@ -98,3 +98,4 @@ RUN R -e "BiocManager::install('ChIPpeakAnno'); library('ChIPpeakAnno')"
 
 #allow converting pdf to png
 RUN sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xml   
+ADD bedGraphToBigWig /usr/bin/bedGraphToBigWig
