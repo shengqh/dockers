@@ -1,15 +1,5 @@
-FROM ubuntu:21.10
+FROM shengqh/bioinfo:base
 
-RUN apt-get update
-RUN apt-get install -y default-jre
-RUN apt-get install -y default-jdk
-RUN apt-get install -y python3 
-RUN apt-get install -y r-base
-
-Run R -e "install.packages('BiocManager');library('BiocManager')"
-RUN R -e "BiocManager::install('xlsx');library('xlsx')"
-
-RUN apt-get install -y python3-pip
 RUN pip3 install umap-learn
 
 RUN R -e "BiocManager::install('Seurat')"
@@ -28,11 +18,7 @@ RUN R -e "install.packages('knitr');library('knitr')"
 RUN R -e "install.packages('rmarkdown');library('rmarkdown')"
 RUN R -e "install.packages('rmdformats');library('rmdformats')"
 RUN R -e "install.packages('DT');library('DT')"
-
-RUN apt-get install -y libcurl4-gnutls-dev librtmp-dev
 RUN R -e "install.packages('RCurl');library('RCurl')"
-
-RUN apt-get install -y libssl-dev libfontconfig1-dev libxml2-dev
 RUN R -e "install.packages('kableExtra');library('kableExtra')"
 RUN R -e "install.packages('ggpubr');library('ggpubr')"
 RUN R -e "install.packages('heatmap3');library('heatmap3')"
@@ -47,7 +33,19 @@ RUN R -e "BiocManager::install('edgeR');library('edgeR')"
 RUN R -e "BiocManager::install('immunogenomics/harmony');library('harmony')"
 RUN R -e "BiocManager::install('Rcpp');library('Rcpp')"
 RUN R -e "BiocManager::install(ask=FALSE)"
+#RUN R -e "BiocManager::install('satijalab/seurat');library('seurat')"
 
 RUN pip3 install cna
 
-RUN R -e "BiocManager::install('ggdendro');library('ggdendro')"
+#RUN cd /usr/lib/jvm && ln -s java-1.8.0-openjdk-amd64 default-java
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+ENV PATH=$PATH:$JAVA_HOME/bin
+
+RUN apt-get update
+RUN apt-get install -y default-jre
+RUN apt-get install -y default-jdk
+RUN R CMD javareconf -e
+RUN add-apt-repository ppa:c2d4u.team/c2d4u4.0+
+RUN apt-get update
+#RUN apt-get install -y r-cran-rjava
+RUN R -e "BiocManager::install('xlsx');library('xlsx')"
