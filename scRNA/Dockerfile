@@ -58,3 +58,5 @@ RUN R -e "BiocManager::install('ggdendro');library('ggdendro')"
 RUN R -e "BiocManager::install('shengqh/cutoff');library('choisycutoff')"
 
 RUN pip3 install cna
+
+RUN R -e "BiocManager::install('formatR');library('formatR')"
