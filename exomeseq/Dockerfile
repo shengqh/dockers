@@ -48,4 +48,7 @@ RUN R -e "BiocManager::install('dendextend');library('dendextend')"
 RUN R -e "BiocManager::install(c('Biostrings', 'Rsamtools', 'biomaRt', 'VennDiagram', 'cowplot'))"
 RUN R -e "BiocManager::install('mclust');library('mclust')"
 
+RUN apt-get update
+RUN apt-get install -y libcairo2-dev
+RUN R -e "BiocManager::install('Cairo');library('Cairo')"
 RUN R -e "BiocManager::install('ComplexHeatmap');library('ComplexHeatmap')"
