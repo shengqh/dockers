@@ -60,3 +60,10 @@ RUN R -e "BiocManager::install('shengqh/cutoff');library('choisycutoff')"
 RUN pip3 install cna
 
 RUN R -e "BiocManager::install('formatR');library('formatR')"
+
+COPY GSEA_4.1.0.zip /opt/
+RUN cd /opt; \
+    unzip GSEA_4.1.0.zip; \
+    rm GSEA_4.1.0.zip
+ENV PATH=/opt/GSEA_4.1.0:$PATH
+RUN gsea-cli.sh
