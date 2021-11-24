@@ -7,7 +7,7 @@ RUN pip3 install umap-learn
 RUN apt-get install -y libhdf5-dev libcurl4-gnutls-dev librtmp-dev libssl-dev libfontconfig1-dev libxml2-dev
 RUN apt-get install -y wget
 
-ARG PANDOC_VERSION="2.14.0.3"
+ARG PANDOC_VERSION="2.16.1"
 RUN cd /opt; \
     wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
     tar -xzvf pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
@@ -25,6 +25,8 @@ RUN add-apt-repository ppa:c2d4u.team/c2d4u4.0+
 RUN apt-get install -y r-base
 
 Run R -e "install.packages('BiocManager');library('BiocManager')"
+RUN R -e "BiocManager::install(ask=FALSE)"
+
 RUN R -e "BiocManager::install('xlsx');library('xlsx')"
 RUN R -e "BiocManager::install('Seurat');library('Seurat')"
 RUN R -e "BiocManager::install('remotes');library('remotes')"
@@ -46,16 +48,12 @@ RUN R -e "BiocManager::install('limma');library('limma')"
 RUN R -e "BiocManager::install('CHETAH');library('CHETAH')"
 RUN R -e "install.packages('SignacX');library('SignacX')"
 
-RUN R -e "BiocManager::install('liuqivandy/scRNABatchQC');library('scRNABatchQC')"
 RUN R -e "BiocManager::install('edgeR');library('edgeR')"
 
 RUN R -e "BiocManager::install('immunogenomics/harmony');library('harmony')"
 RUN R -e "BiocManager::install('Rcpp');library('Rcpp')"
-RUN R -e "BiocManager::install(ask=FALSE)"
 
 RUN R -e "BiocManager::install('ggdendro');library('ggdendro')"
-
-RUN R -e "BiocManager::install('shengqh/cutoff');library('choisycutoff')"
 
 RUN pip3 install cna
 
@@ -66,4 +64,10 @@ RUN cd /opt; \
     unzip GSEA_4.1.0.zip; \
     rm GSEA_4.1.0.zip
 ENV PATH=/opt/GSEA_4.1.0:$PATH
-RUN gsea-cli.sh
+
+RUN R -e "BiocManager::install('immunomind/immunarch');library('immunarch')"
+
+RUN R -e "BiocManager::install('shengqh/cutoff');library('choisycutoff')"
+RUN R -e "BiocManager::install('liuqivandy/scRNABatchQC');library('scRNABatchQC')"
+RUN R -e "BiocManager::install('JiaLiVUMC/scMRMA');library('scMRMA')"
+

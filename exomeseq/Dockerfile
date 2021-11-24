@@ -52,3 +52,7 @@ RUN apt-get update
 RUN apt-get install -y libcairo2-dev
 RUN R -e "BiocManager::install('Cairo');library('Cairo')"
 RUN R -e "BiocManager::install('ComplexHeatmap');library('ComplexHeatmap')"
+
+RUN R -e "BiocManager::install('cn.mops');library('cn.mops')"
+RUN R -e "BiocManager::install('DNAcopy');library('DNAcopy')"
+RUN R -e "BiocManager::install('data.table');library('data.table')"

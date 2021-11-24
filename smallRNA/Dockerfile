@@ -37,3 +37,5 @@ RUN pip3 install --no-cache-dir --upgrade \
     pytabix
 
 ENV PATH=/opt/sratoolkit.2.10.8-ubuntu64/bin:$PATH
+RUN R -e "BiocManager::install('vegan')"
+RUN R -e "BiocManager::install('heatmap3'); library('heatmap3')"

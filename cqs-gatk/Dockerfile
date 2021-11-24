@@ -1,4 +1,4 @@
-FROM broadinstitute/gatk:4.2.0.0
+FROM broadinstitute/gatk:4.2.2.0
 
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
@@ -28,3 +28,5 @@ RUN wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSI
     cd .. ; \
     rm -rf bcftools-${BCFTOOLS_VERSION}.tar.bz2 bcftools-${BCFTOOLS_VERSION}
 RUN bcftools --version
+
+#RUN pip install git+https://github.com/jkbr/httpie.git#egg=httpie

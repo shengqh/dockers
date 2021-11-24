@@ -1,2 +1,1 @@
-docker build -t shengqh/bioinfo:cqs-smallRNA .
-docker push shengqh/bioinfo:cqs-smallRNA
+docker build -t shengqh/cqs_smallrnaseq .
