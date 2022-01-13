@@ -65,6 +65,10 @@ RUN cd /opt; \
 ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
 
 RUN R -e "BiocManager::install('heatmap3');library('heatmap3')"
-ENV NGSPERL_VERSION="20210413"
+RUN R -e "BiocManager::install('umap');library('umap')"
+RUN R -e "BiocManager::install('magrittr');library('magrittr')"
+
+RUN R -e "BiocManager::install(ask=FALSE)"
+ENV NGSPERL_VERSION="20211228"
 RUN cd /opt/ngsperl; \
     git pull
