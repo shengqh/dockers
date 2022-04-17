@@ -20,3 +20,7 @@ RUN apt-get install -y libfontconfig1-dev
 RUN apt-get install -y libxml2-dev
 RUN apt-get install -y python3-pip
 RUN pip3 install igraph
+
+RUN Rscript --slave --no-save --no-restore-history -e 'install.packages("languageserver")'
+RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install(ask=F)'
+RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("jsonlite",ask=F)'

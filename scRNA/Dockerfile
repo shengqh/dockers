@@ -7,7 +7,7 @@ RUN pip3 install umap-learn
 RUN apt-get install -y libhdf5-dev libcurl4-gnutls-dev librtmp-dev libssl-dev libfontconfig1-dev libxml2-dev
 RUN apt-get install -y wget
 
-ARG PANDOC_VERSION="2.16.1"
+ARG PANDOC_VERSION="2.18"
 RUN cd /opt; \
     wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
     tar -xzvf pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
@@ -41,11 +41,14 @@ RUN R -e "install.packages('rmdformats');library('rmdformats')"
 RUN R -e "install.packages('DT');library('DT')"
 RUN R -e "install.packages('RCurl');library('RCurl')"
 RUN R -e "install.packages('kableExtra');library('kableExtra')"
+
+RUN apt-get install -y libnlopt-dev
+RUN R -e "install.packages(c('car'))"
 RUN R -e "install.packages('ggpubr');library('ggpubr')"
-RUN R -e "install.packages('heatmap3');library('heatmap3')"
+RUN R -e "BiocManager::install('heatmap3');library('heatmap3')"
 
 RUN R -e "BiocManager::install('limma');library('limma')"
-RUN R -e "BiocManager::install('CHETAH');library('CHETAH')"
+RUN R -e "BiocManager::install('jdekanter/CHETAH');library('CHETAH')"
 RUN R -e "install.packages('SignacX');library('SignacX')"
 
 RUN R -e "BiocManager::install('edgeR');library('edgeR')"
@@ -59,15 +62,19 @@ RUN pip3 install cna
 
 RUN R -e "BiocManager::install('formatR');library('formatR')"
 
-COPY GSEA_4.1.0.zip /opt/
+ENV gsea_ver=4.2.3
+COPY GSEA_${gsea_ver}.zip /opt/
 RUN cd /opt; \
-    unzip GSEA_4.1.0.zip; \
-    rm GSEA_4.1.0.zip
-ENV PATH=/opt/GSEA_4.1.0:$PATH
+    unzip GSEA_${gsea_ver}.zip; \
+    rm GSEA_${gsea_ver}.zip
+ENV PATH=/opt/GSEA_${gsea_ver}:$PATH
 
 RUN R -e "BiocManager::install('immunomind/immunarch');library('immunarch')"
 
+ENV cutoff_ver=20220208
 RUN R -e "BiocManager::install('shengqh/cutoff');library('choisycutoff')"
 RUN R -e "BiocManager::install('liuqivandy/scRNABatchQC');library('scRNABatchQC')"
 RUN R -e "BiocManager::install('JiaLiVUMC/scMRMA');library('scMRMA')"
 
+RUN R -e "BiocManager::install('glmGamPoi');library('glmGamPoi')"
+RUN R -e "BiocManager::install('chris-mcginnis-ucsf/DoubletFinder');library('DoubletFinder')"

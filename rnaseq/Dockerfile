@@ -58,17 +58,32 @@ RUN R -e "BiocManager::install('TCGAbiolinks');library('TCGAbiolinks')"
 RUN R -e "BiocManager::install('WebGestaltR');library('WebGestaltR')"
 RUN R -e "BiocManager::install()"
 
-ENV NGSPERL_VERSION="20210331"
-RUN cd /opt; \
-    git clone https://github.com/shengqh/ngsperl.git; \
-    bash /opt/ngsperl/install_packages_nosudo.sh
-ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
-
 RUN R -e "BiocManager::install('heatmap3');library('heatmap3')"
 RUN R -e "BiocManager::install('umap');library('umap')"
 RUN R -e "BiocManager::install('magrittr');library('magrittr')"
 
 RUN R -e "BiocManager::install(ask=FALSE)"
-ENV NGSPERL_VERSION="20211228"
-RUN cd /opt/ngsperl; \
-    git pull
+
+ENV NGSPERL_VERSION="20220325"
+RUN cd /opt; \
+    git clone https://github.com/shengqh/ngsperl.git; \
+    bash /opt/ngsperl/install_packages_nosudo.sh
+ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+
+ENV GATK_VERSION="4.2.3"
+RUN cd /opt; \
+    wget https://data.broadinstitute.org/gsea-msigdb/gsea/software/desktop/4.2/GSEA_Linux_4.2.3.zip ; \
+    unzip GSEA_Linux_4.2.3.zip ; \
+    rm GSEA_Linux_4.2.3.zip ;
+ENV PATH=/opt/GSEA_Linux_4.2.3:$PATH
+
+RUN R -e "BiocManager::install('areyesq89/DEXSeq');library('DEXSeq')"
+RUN echo '#!/usr/bin/python3' > /usr/bin/dexseq_count.py; \
+    cat /usr/local/lib/R/site-library/DEXSeq/python_scripts/dexseq_count.py >> /usr/bin/dexseq_count.py; \
+    chmod 755 /usr/bin/dexseq_count.py; \
+    echo '#!/usr/bin/python3' > /usr/bin/dexseq_prepare_annotation.py; \
+    cat /usr/local/lib/R/site-library/DEXSeq/python_scripts/dexseq_prepare_annotation.py >> /usr/bin/dexseq_prepare_annotation.py; \
+    chmod 755 /usr/bin/dexseq_prepare_annotation.py
+
+RUN pip3 install HTSeq
+RUN pip3 install --upgrade numpy

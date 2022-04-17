@@ -41,3 +41,11 @@ RUN R -e "BiocManager::install('vegan')"
 RUN R -e "BiocManager::install('heatmap3'); library('heatmap3')"
 RUN R -e "BiocManager::install('knitr'); library('knitr')"
 RUN R -e "BiocManager::install('rmarkdown'); library('rmarkdown')"
+
+ARG CQSTOOLS_VERSION="1.8.12"  
+RUN cd /opt; \
+    wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
+    unzip cqstools.${CQSTOOLS_VERSION}.zip; \
+    rm cqstools.${CQSTOOLS_VERSION}.zip; \
+    chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
+ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH

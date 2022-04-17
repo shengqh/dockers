@@ -66,3 +66,7 @@ RUN R -e "BiocManager::install('RCurl');library('RCurl')"
 RUN R -e "BiocManager::install('htmltools');library('htmltools')"
 RUN R -e "BiocManager::install('stringr');library('stringr')"
 RUN R -e "BiocManager::install('karyoploteR');library('karyoploteR')"
+
+ENV multiqc_ver=1.12
+RUN pip3 install --no-cache-dir --upgrade multiqc
+RUN multiqc --version
