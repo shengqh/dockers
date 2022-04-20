@@ -64,19 +64,6 @@ RUN R -e "BiocManager::install('magrittr');library('magrittr')"
 
 RUN R -e "BiocManager::install(ask=FALSE)"
 
-ENV NGSPERL_VERSION="20220325"
-RUN cd /opt; \
-    git clone https://github.com/shengqh/ngsperl.git; \
-    bash /opt/ngsperl/install_packages_nosudo.sh
-ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
-
-ENV GATK_VERSION="4.2.3"
-RUN cd /opt; \
-    wget https://data.broadinstitute.org/gsea-msigdb/gsea/software/desktop/4.2/GSEA_Linux_4.2.3.zip ; \
-    unzip GSEA_Linux_4.2.3.zip ; \
-    rm GSEA_Linux_4.2.3.zip ;
-ENV PATH=/opt/GSEA_Linux_4.2.3:$PATH
-
 RUN R -e "BiocManager::install('areyesq89/DEXSeq');library('DEXSeq')"
 RUN echo '#!/usr/bin/python3' > /usr/bin/dexseq_count.py; \
     cat /usr/local/lib/R/site-library/DEXSeq/python_scripts/dexseq_count.py >> /usr/bin/dexseq_count.py; \
@@ -87,3 +74,28 @@ RUN echo '#!/usr/bin/python3' > /usr/bin/dexseq_count.py; \
 
 RUN pip3 install HTSeq
 RUN pip3 install --upgrade numpy
+
+#for EnhancedVolcano
+RUN apt-get install -y libproj-dev
+RUN R -e "BiocManager::install('proj4'); library('proj4')"
+RUN apt-get install -y libharfbuzz-dev libfribidi-dev
+RUN R -e "BiocManager::install('textshaping'); library('textshaping')"
+RUN R -e "BiocManager::install('ragg'); library('ragg')"
+RUN R -e "BiocManager::install('ggalt'); library('ggalt')"
+RUN R -e "BiocManager::install('ggrastr'); library('ggrastr')"
+RUN R -e "BiocManager::install('EnhancedVolcano'); library('EnhancedVolcano')"
+
+RUN R -e "BiocManager::install(ask=FALSE)"
+
+ENV GATK_VERSION="4.2.3"
+RUN cd /opt; \
+    wget https://data.broadinstitute.org/gsea-msigdb/gsea/software/desktop/4.2/GSEA_Linux_4.2.3.zip ; \
+    unzip GSEA_Linux_4.2.3.zip ; \
+    rm GSEA_Linux_4.2.3.zip ;
+ENV PATH=/opt/GSEA_Linux_4.2.3:$PATH
+
+ENV NGSPERL_VERSION="20220418"
+RUN cd /opt; \
+    git clone https://github.com/shengqh/ngsperl.git; \
+    bash /opt/ngsperl/install_packages_nosudo.sh
+ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
