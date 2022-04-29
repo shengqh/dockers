@@ -50,7 +50,7 @@ RUN cd /opt; \
 ENV PATH=/opt/ncbi-blast-${BLAST_VERSION}+/bin:$PATH
 RUN blastn -version
 
-ARG CQSTOOLS_VERSION="1.8.12"  
+ARG CQSTOOLS_VERSION="1.8.11"  
 RUN cd /opt; \
     wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
     unzip cqstools.${CQSTOOLS_VERSION}.zip; \
@@ -58,8 +58,10 @@ RUN cd /opt; \
     chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
 ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
 
+RUN pip3 install --no-cache-dir --upgrade pandas seaborn 
+
 ARG SPCOUNT_VERSION="0.0.8"
-RUN cd /opts; \
+RUN cd /opt; \
     git clone https://github.com/shengqh/spcount; \
     cd spcount; \
     pip3 install . ; \
