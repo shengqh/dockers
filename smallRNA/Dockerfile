@@ -1,9 +1,5 @@
 FROM shengqh/bioinfo:base
 
-RUN R -e "BiocManager::install(c('DESeq2', 'VennDiagram', 'edgeR', 'DT', 'cowplot'))"
-RUN R -e "BiocManager::install(c('ggpubr', 'colorRamps'))"
-RUN R -e "BiocManager::install(ask=F)"
-
 RUN apt-get install -y lftp
 RUN apt-get install -y unzip
 
@@ -14,15 +10,17 @@ RUN pip3 install --no-cache-dir --upgrade \
     pytabix
 
 ENV PATH=/opt/sratoolkit.2.10.8-ubuntu64/bin:$PATH
+RUN R -e "BiocManager::install(c('DESeq2', 'VennDiagram', 'edgeR', 'DT', 'cowplot'))"
+RUN R -e "BiocManager::install(c('ggpubr', 'colorRamps'))"
 RUN R -e "BiocManager::install('vegan')"
 RUN R -e "BiocManager::install('heatmap3'); library('heatmap3')"
-RUN R -e "BiocManager::install('knitr'); library('knitr')"
 RUN R -e "BiocManager::install('rmarkdown'); library('rmarkdown')"
 
 #for EnhancedVolcano
+RUN apt-get update
+RUN apt-get install -y libsqlite3-dev
 RUN apt-get install -y libproj-dev
 RUN R -e "BiocManager::install('proj4'); library('proj4')"
-RUN apt-get update
 RUN apt-get install -y libcairo2-dev
 RUN R -e "BiocManager::install('Cairo'); library('Cairo')"
 RUN apt-get install -y libharfbuzz-dev libfribidi-dev
@@ -31,7 +29,8 @@ RUN R -e "BiocManager::install('ragg'); library('ragg')"
 RUN R -e "BiocManager::install('ggalt'); library('ggalt')"
 RUN R -e "BiocManager::install('ggrastr'); library('ggrastr')"
 RUN R -e "BiocManager::install('EnhancedVolcano'); library('EnhancedVolcano')"
-
+RUN R -e "BiocManager::install('remotes'); library('remotes')"
+RUN R -e "BiocManager::install('yihui/knitr'); library('knitr')"
 RUN R -e "BiocManager::install(ask=FALSE)"
 
 ARG BOWTIE_VERSION="1.3.1"
@@ -60,7 +59,7 @@ ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
 
 RUN pip3 install --no-cache-dir --upgrade pandas seaborn 
 
-ARG SPCOUNT_VERSION="0.0.8"
+ARG SPCOUNT_VERSION="0.0.9"
 RUN cd /opt; \
     git clone https://github.com/shengqh/spcount; \
     cd spcount; \
