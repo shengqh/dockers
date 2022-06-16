@@ -2,8 +2,20 @@ FROM shengqh/cqs_smallrnaseq:20220429
 
 RUN R -e "BiocManager::install('remotes'); library('remotes')"
 RUN R -e "BiocManager::install('yihui/knitr'); library('knitr')"
+RUN R -e "BiocManager::install('kableExtra'); library('kableExtra')"
+RUN R -e "BiocManager::install()"
 
-ARG SPCOUNT_VERSION="0.0.9"
+ARG Krona_VERSION="2.8.1"
+RUN cd /opt; \
+    wget https://github.com/marbl/Krona/archive/refs/tags/v${Krona_VERSION}.tar.gz; \
+    tar -xzvf v${Krona_VERSION}.tar.gz ; \
+    rm v${Krona_VERSION}.tar.gz ; \
+    cd Krona-${Krona_VERSION}/KronaTools; \
+    ./install.pl; \
+    mkdir taxonomy ; \
+    ./updateTaxonomy.sh 
+
+ARG SPCOUNT_VERSION="0.0.10"
 RUN cd /opt; \
     git clone https://github.com/shengqh/spcount; \
     cd spcount; \
@@ -11,3 +23,9 @@ RUN cd /opt; \
     cd ..; \
     rm -rf spcount; \
     spcount -h
+
+ENV NGSPERL_VERSION="20220615"
+RUN cd /opt; \
+    git clone https://github.com/shengqh/ngsperl.git; \
+    bash /opt/ngsperl/install_packages_nosudo.sh
+ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB

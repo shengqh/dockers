@@ -76,3 +76,5 @@ RUN cd /opt; \
     unzip GSEA_${gsea_ver}.zip; \
     rm GSEA_${gsea_ver}.zip
 ENV PATH=/opt/GSEA_${gsea_ver}:$PATH
+
+COPY irtools.centos /usr/bin/irtools
