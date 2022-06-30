@@ -1,0 +1,1 @@
+When I used singularity image based on litd/docker-cutruntools:v202201 directly, the default R from conda couldn't start properly. Actually, author want to use system R rather than conda R since author installs the R packages using /usr/bin/Rscript. So I removed the conda R to make system R as default.
