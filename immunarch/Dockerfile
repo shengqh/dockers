@@ -39,3 +39,4 @@ RUN cd /opt; \
 
 RUN apt install -y libopenblas-dev
 RUN R -e "BiocManager::install('cowplot'); library('cowplot')"
+RUN R -e "BiocManager::install('rmdformats'); library('rmdformats')"
