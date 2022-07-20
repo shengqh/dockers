@@ -1,0 +1,9 @@
+FROM shengqh/cqs_exomeseq:20220307
+
+RUN pip3 install fastqsplitter
+
+RUN cd /usr/bin; \ 
+    wget https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools.static.binary; \
+    mv bedtools.static.binary bedtools; \
+    chmod 755 bedtools; \
+    bedtools -h

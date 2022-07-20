@@ -19,7 +19,7 @@ RUN cd /opt; \
     bash /opt/ngsperl/install_packages_nosudo.sh
 ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
 
-ARG SPCOUNT_VERSION="0.0.11"
+ARG SPCOUNT_VERSION="0.0.12"
 RUN cd /opt; \
     git clone https://github.com/shengqh/spcount; \
     cd spcount; \
@@ -28,6 +28,6 @@ RUN cd /opt; \
     rm -rf spcount; \
     spcount -h
 
-ENV NGSPERL_VERSION="20220616"
+ENV NGSPERL_VERSION="20220719_2"
 RUN cd /opt/ngsperl; \
     git pull
