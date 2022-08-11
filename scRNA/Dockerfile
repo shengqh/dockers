@@ -78,3 +78,8 @@ RUN cd /opt; \
 ENV PATH=/opt/GSEA_${gsea_ver}:$PATH
 
 COPY irtools.centos /usr/bin/irtools
+
+RUN R -e "BiocManager::install('GUniFrac');library('GUniFrac')"
+
+ENV UPDATE=20220803
+RUN R -e "BiocManager::install('')"
