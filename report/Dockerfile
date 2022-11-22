@@ -1,4 +1,4 @@
-FROM r-base:4.2.0
+FROM r-base:4.2.2
 
 RUN R -e "install.packages('BiocManager'); library('BiocManager')"
 RUN R -e "BiocManager::install('remotes'); library('remotes')"
@@ -26,7 +26,7 @@ RUN R -e "BiocManager::install('systemfonts'); library('systemfonts')"
 RUN R -e "BiocManager::install('kableExtra'); library('kableExtra')"
 RUN R -e "BiocManager::install('tidyverse'); library('tidyverse')"
 
-ARG PANDOC_VERSION="2.18"
+ARG PANDOC_VERSION="2.19.2"
 ENV PATH=/opt/pandoc-${PANDOC_VERSION}/bin:$PATH
 RUN cd /opt; \
     wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
@@ -40,5 +40,12 @@ RUN R -e "BiocManager::install('cowplot'); library('cowplot')"
 RUN apt install -y libcairo2-dev cmake libharfbuzz-dev libfribidi-dev libprotobuf-dev libgsl-dev
 RUN apt install -y automake
 RUN R -e "BiocManager::install('Seurat'); library('Seurat')"
+
+
+RUN apt install -y ghostscript
+RUN apt install -y fonts-freefont-otf
+RUN apt install -y librsvg2-bin 
+RUN apt install -y libmagickcore-6.q16-6-extra
+RUN apt install -y imagemagick
 
 

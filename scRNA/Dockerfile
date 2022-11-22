@@ -70,16 +70,31 @@ RUN cd /opt; \
 ENV PATH=/opt/pandoc-${PANDOC_VERSION}/bin:$PATH
 RUN pandoc --version
 
-ENV gsea_ver=4.2.3
-COPY GSEA_${gsea_ver}.zip /opt/
-RUN cd /opt; \
-    unzip GSEA_${gsea_ver}.zip; \
-    rm GSEA_${gsea_ver}.zip
-ENV PATH=/opt/GSEA_${gsea_ver}:$PATH
-
 COPY irtools.centos /usr/bin/irtools
 
 RUN R -e "BiocManager::install('GUniFrac');library('GUniFrac')"
 
-ENV UPDATE=20220803
-RUN R -e "BiocManager::install('')"
+RUN pip3 install pysam
+RUN pip3 install pandas
+
+RUN cd /opt; \
+    wget https://github.com/Illumina/strelka/releases/download/v2.9.10/strelka-2.9.10.centos6_x86_64.tar.bz2; \
+    tar xvjf strelka-2.9.10.centos6_x86_64.tar.bz2; \
+    rm strelka-2.9.10.centos6_x86_64.tar.bz2
+ENV PATH=/opt/strelka-2.9.10.centos6_x86_64/bin/:$PATH
+
+ENV GSEA_VERSION="4.3.2"
+RUN cd /opt; \
+    wget https://data.broadinstitute.org/gsea-msigdb/gsea/software/desktop/4.3/GSEA_Linux_${GSEA_VERSION}.zip ; \
+    unzip GSEA_Linux_${GSEA_VERSION}.zip ; \
+    rm GSEA_Linux_${GSEA_VERSION}.zip ;
+ENV PATH=/opt/GSEA_Linux_${GSEA_VERSION}:$PATH
+
+RUN apt update
+RUN apt install -y git curl
+
+ENV NGSPERL_VERSION="20221116"
+RUN cd /opt; \
+    git clone https://github.com/shengqh/ngsperl.git; \
+    bash /opt/ngsperl/install_packages_nosudo.sh
+ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB

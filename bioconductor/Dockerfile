@@ -24,3 +24,6 @@ RUN pip3 install igraph
 RUN Rscript --slave --no-save --no-restore-history -e 'install.packages("languageserver")'
 RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install(ask=F)'
 RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("jsonlite",ask=F)'
+
+RUN apt-get install -y libgdal-dev
+RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("rgdal",ask=F)'

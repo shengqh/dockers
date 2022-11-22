@@ -18,3 +18,5 @@ ENV ChIPQC_VERSION="20210325"
 RUN R -e 'BiocManager::install("shengqh/ChIPQC")'
 
 RUN R -e "BiocManager::install('BiocParallel'); library('BiocParallel')"
+RUN R -e "BiocManager::install('biomaRt'); library('biomaRt')"
+
