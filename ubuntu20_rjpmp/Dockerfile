@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y apt-utils locales && \
     echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
     locale-gen en_US.UTF-8
 
-#20201102: R 4.0.3
+#20221125: R 4.2.2
 RUN apt-get install -y \
     dirmngr \
     gnupg \
@@ -18,10 +18,10 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD5
     add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/' && \
     apt-get update && apt-get install -y r-base
 
-#20201102: java 1.8.0_272
-RUN apt install -y openjdk-8-jre
+#20221125: java 11.0.17
+RUN apt install -y default-jre default-jdk
 
-#20201102: perl 5.30.3
+#20201102: perl 5.30.0
 RUN apt-get install -y \
     apt-transport-https \
     ca-certificates \
@@ -38,7 +38,7 @@ RUN apt-get install -y \
 
 RUN curl -L http://cpanmin.us | perl - Perl::Core;
 
-#20201102: mono 6.12.0.90
+#20221125: mono 6.12.0.182
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
     echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
     apt-get update && \

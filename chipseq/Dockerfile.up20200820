@@ -2,3 +2,4 @@ FROM shengqh/cqs_chipseq:20210126
 
 RUN R -e "BiocManager::install('TxDb.Hsapiens.UCSC.hg38.knownGene'); library('TxDb.Hsapiens.UCSC.hg38.knownGene')"
 RUN R -e "BiocManager::install('kableExtra'); library('kableExtra')"
+RUN R -e "BiocManager::install('biomaRt'); library('biomaRt')"

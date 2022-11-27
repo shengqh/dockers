@@ -32,7 +32,7 @@ ENV NGSPERL_VERSION="20221020"
 RUN cd /opt/ngsperl; \
     git pull
 
-ARG CQSTOOLS_VERSION="1.8.13"  
+ARG CQSTOOLS_VERSION="1.8.14"  
 RUN cd /opt; \
     wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
     unzip cqstools.${CQSTOOLS_VERSION}.zip; \

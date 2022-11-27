@@ -13,10 +13,8 @@ RUN apt-get install -y libgit2-dev
 RUN R -e "BiocManager::install('TxDb.Hsapiens.UCSC.hg38.knownGene'); library('TxDb.Hsapiens.UCSC.hg38.knownGene')"
 RUN R -e "BiocManager::install('kableExtra'); library('kableExtra')"
 RUN R -e "BiocManager::install('tidyverse'); library('tidyverse')"
-
-ENV ChIPQC_VERSION="20210325"
-RUN R -e 'BiocManager::install("shengqh/ChIPQC")'
-
 RUN R -e "BiocManager::install('BiocParallel'); library('BiocParallel')"
 RUN R -e "BiocManager::install('biomaRt'); library('biomaRt')"
 
+ENV ChIPQC_VERSION="20210325"
+RUN R -e "BiocManager::install('shengqh/ChIPQC'); library('ChIPQC')"
