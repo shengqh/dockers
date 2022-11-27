@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo_base:20221126
+FROM shengqh/bioinfo_base:20221127
 
 ENV BOWTIE2_VERSION="2.4.1"
 ENV PATH=/opt/bowtie2-${BOWTIE2_VERSION}-linux-x86_64:$PATH

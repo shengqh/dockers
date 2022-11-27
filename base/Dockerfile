@@ -1,5 +1,5 @@
 #FROM shengqh/bioinfo:ubuntu20.04_r4.0_java1.8_perl5.30_mono6.12_python3.8
-FROM shengqh/ubuntu20.04_r4.2.2_java11.0.17_perl5.30.0_mono6.12.0.182_python3.8.10
+FROM shengqh/ubuntu20.04_r4.2.2_java11.0.17_perl5.30.0_mono6.12.0.182_python3.8.10:20221127
 
 RUN pip3 install --upgrade pip; \
     pip3 install wheel
@@ -96,7 +96,7 @@ RUN mkdir /workspace
 RUN mkdir /data1
 RUN apt-get install -y tabix
 
-RUN Rscript --slave --no-save --no-restore-history -e 'install.packages("BiocManager");BiocManager::install()'
+RUN R -e 'install.packages("BiocManager");BiocManager::install()'
 RUN R -e "BiocManager::install('remotes'); library('remotes')"
 RUN R -e "BiocManager::install('ggplot2'); library('ggplot2')"
 RUN R -e "BiocManager::install('rmarkdown'); library('rmarkdown')"
