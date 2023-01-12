@@ -7,6 +7,8 @@ RUN cd /opt; \
     rm GSEA_Linux_${GSEA_VERSION}.zip ;
 ENV PATH=/opt/GSEA_Linux_${GSEA_VERSION}:$PATH
 
-ENV NGSPERL_VERSION="20221116"
+RUN R -e "BiocManager::install('rmdformats');library('rmdformats')"
+
+ENV NGSPERL_VERSION="20230105"
 RUN cd /opt/ngsperl; \
     git pull

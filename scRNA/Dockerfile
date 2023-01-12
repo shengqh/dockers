@@ -93,8 +93,30 @@ ENV PATH=/opt/GSEA_Linux_${GSEA_VERSION}:$PATH
 RUN apt update
 RUN apt install -y git curl
 
-ENV NGSPERL_VERSION="20221116"
+RUN R -e "BiocManager::install('clustree');library('clustree')"
+RUN R -e "BiocManager::install('mclust');library('mclust')"
+
+ENV NGSPERL_VERSION="20221222"
 RUN cd /opt; \
     git clone https://github.com/shengqh/ngsperl.git; \
     bash /opt/ngsperl/install_packages_nosudo.sh
 ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+
+RUN R -e "BiocManager::install(ask=FALSE)"
+RUN R -e "BiocManager::install('DropletUtils', ask=FALSE);library('DropletUtils')"
+
+RUN apt-get install software-properties-common; \
+    add-apt-repository -y ppa:cran/imagemagick; \
+    apt-get update; \
+    apt-get install -y libmagick++-dev
+RUN R -e "BiocManager::install('magick', ask=FALSE);library('magick')"
+RUN R -e "BiocManager::install('campbio/celda', ask=FALSE);library('celda')"
+
+RUN R -e "BiocManager::install('scDblFinder', ask=FALSE);library('scDblFinder')"
+RUN R -e "BiocManager::install('Nebulosa', ask=FALSE);library('Nebulosa')"
+
+RUN pip3 install GMM-demux
+
+ENV NGSPERL_VERSION="20220103"
+RUN cd /opt/ngsperl; \
+    git pull
