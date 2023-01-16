@@ -117,6 +117,14 @@ RUN R -e "BiocManager::install('Nebulosa', ask=FALSE);library('Nebulosa')"
 
 RUN pip3 install GMM-demux
 
-ENV NGSPERL_VERSION="20220103"
+RUN apt-get update -qq; apt-get install -y libharfbuzz-dev libfribidi-dev
+
+RUN R -e "BiocManager::install('textshaping', ask=FALSE);library('textshaping')"
+RUN R -e "BiocManager::install('ragg', ask=FALSE);library('ragg')"
+RUN R -e "BiocManager::install('pkgdown', ask=FALSE);library('pkgdown')"
+RUN R -e "BiocManager::install('devtools', ask=FALSE);library('devtools')"
+RUN R -e "BiocManager::install('shengqh/scDemultiplex', ask=FALSE);library('scDemultiplex')"
+
+ENV NGSPERL_VERSION="20230115"
 RUN cd /opt/ngsperl; \
     git pull
