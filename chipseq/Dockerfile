@@ -45,9 +45,6 @@ RUN R -e "BiocManager::install('biovizBase'); library('biovizBase')"
 RUN R -e "BiocManager::install('ggbio'); library('ggbio')"
 RUN R -e "BiocManager::install('ChIPpeakAnno'); library('ChIPpeakAnno')"
 
-ENV ChIPQC_VERSION="v20221126"
-RUN R -e 'library(devtools);install_github("shengqh/ChIPQC");library(ChIPQC)'
-
 #allow converting pdf to png
 RUN sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xml   
 ADD bedGraphToBigWig /usr/bin/bedGraphToBigWig
@@ -72,3 +69,9 @@ RUN wget http://downloads.sourceforge.net/project/bio-bwa/bwa-${BWA_VERSION}.tar
     cp bwa /usr/bin ; \
     cd .. ; \
     rm -rf bwa-${BWA_VERSION}
+
+RUN R -e "BiocManager::install()"
+
+ENV ChIPQC_VERSION="v20230122"
+RUN R -e 'BiocManager::install("shengqh/ChIPQC");library(ChIPQC)'
+
