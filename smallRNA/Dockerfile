@@ -28,10 +28,6 @@ RUN cd /opt; \
     rm -rf spcount; \
     spcount -h
 
-ENV NGSPERL_VERSION="20221020"
-RUN cd /opt/ngsperl; \
-    git pull
-
 ARG CQSTOOLS_VERSION="1.8.14"  
 RUN cd /opt; \
     wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
@@ -39,4 +35,10 @@ RUN cd /opt; \
     rm cqstools.${CQSTOOLS_VERSION}.zip; \
     chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
 ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
+
+RUN R -e "BiocManager::install('rmdformats'); library('rmdformats')"
+
+ENV NGSPERL_VERSION="20230131"
+RUN cd /opt/ngsperl; \
+    git pull
 
