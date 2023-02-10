@@ -123,8 +123,13 @@ RUN R -e "BiocManager::install('textshaping', ask=FALSE);library('textshaping')"
 RUN R -e "BiocManager::install('ragg', ask=FALSE);library('ragg')"
 RUN R -e "BiocManager::install('pkgdown', ask=FALSE);library('pkgdown')"
 RUN R -e "BiocManager::install('devtools', ask=FALSE);library('devtools')"
+RUN R -e "BiocManager::install('tictoc', ask=FALSE);library('tictoc')"
+
+ENV scDemultiplex_VERSION="20230116_v2"
 RUN R -e "BiocManager::install('shengqh/scDemultiplex', ask=FALSE);library('scDemultiplex')"
 
-ENV NGSPERL_VERSION="20230115"
+RUN R -e "BiocManager::install('igordot/msigdbr', ask=FALSE);library('msigdbr')"
+
+ENV NGSPERL_VERSION="20230131"
 RUN cd /opt/ngsperl; \
     git pull
