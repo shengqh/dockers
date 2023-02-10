@@ -16,5 +16,5 @@ RUN R -e "BiocManager::install('tidyverse'); library('tidyverse')"
 RUN R -e "BiocManager::install('BiocParallel'); library('BiocParallel')"
 RUN R -e "BiocManager::install('biomaRt'); library('biomaRt')"
 
-ENV ChIPQC_VERSION="20210325"
+ENV ChIPQC_VERSION="20220122"
 RUN R -e "BiocManager::install('shengqh/ChIPQC'); library('ChIPQC')"
