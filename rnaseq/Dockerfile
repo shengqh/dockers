@@ -11,6 +11,8 @@ RUN R -e "BiocManager::install('rmdformats');library('rmdformats')"
 
 RUN R -e "BiocManager::install('igordot/msigdbr', ask=FALSE);library('msigdbr')"
 
-ENV NGSPERL_VERSION="20230131"
+RUN R -e "BiocManager::install('bzhanglab/WebGestaltR', ask=FALSE);library('WebGestaltR')"
+
+ENV NGSPERL_VERSION="20230214"
 RUN cd /opt/ngsperl; \
     git pull
