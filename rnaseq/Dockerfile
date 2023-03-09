@@ -13,6 +13,12 @@ RUN R -e "BiocManager::install('igordot/msigdbr', ask=FALSE);library('msigdbr')"
 
 RUN R -e "BiocManager::install('bzhanglab/WebGestaltR', ask=FALSE);library('WebGestaltR')"
 
-ENV NGSPERL_VERSION="20230214"
+RUN cd /opt; \
+    wget https://github.com/COMBINE-lab/salmon/releases/download/v1.10.0/salmon-1.10.0_linux_x86_64.tar.gz ; \
+    tar -xzvf salmon-1.10.0_linux_x86_64.tar.gz ; \
+    rm salmon-1.10.0_linux_x86_64.tar.gz ;
+ENV PATH=/opt/salmon-latest_linux_x86_64/bin:$PATH
+
+ENV NGSPERL_VERSION="20230305"
 RUN cd /opt/ngsperl; \
     git pull

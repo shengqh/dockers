@@ -24,3 +24,17 @@ RUN R -e "require(remotes);install_version('locfit', version='1.5-9.4',repos = '
 
 ENV ChIPQC_VERSION="202300226"
 RUN R -e "BiocManager::install('shengqh/ChIPQC'); library('ChIPQC')"
+
+ENV samtools_version 1.17
+# install samtools
+WORKDIR /usr/bin/
+RUN cd /opt; \
+  wget https://github.com/samtools/samtools/releases/download/${samtools_version}/samtools-${samtools_version}.tar.bz2; \
+  tar -xjvf samtools-${samtools_version}.tar.bz2; \
+  cd samtools-${samtools_version}; \
+  RUN ./configure; \
+  make; \
+  make install; \
+  rm -rf /opt/samtools-${samtools_version}.tar.bz2 /opt/samtools-${samtools_version}
+RUN samtools --version
+
