@@ -132,6 +132,17 @@ RUN R -e "BiocManager::install('igordot/msigdbr', ask=FALSE);library('msigdbr')"
 
 RUN R -e "BiocManager::install('bzhanglab/WebGestaltR', ask=FALSE);library('WebGestaltR')"
 
-ENV NGSPERL_VERSION="20230214"
+RUN apt-get install -y libfftw3-dev libfftw3-doc
+RUN R -e "BiocManager::install('qqconf', ask=FALSE);library('qqconf')"
+RUN R -e "BiocManager::install('YuLab-SMU/ggtree', ask=FALSE);library('ggtree')"
+RUN R -e "BiocManager::install('singleCellTK', ask=FALSE);library('singleCellTK')"
+
+RUN R -e "BiocManager::install('SingleR', ask=FALSE);library('SingleR')"
+RUN R -e "BiocManager::install('scCustomize', ask=FALSE);library('scCustomize')"
+
+RUN R -e "BiocManager::install('sctransform', force=TRUE, ask=FALSE);library('sctransform')"
+RUN R -e "BiocManager::install('Seurat', force=TRUE, ask=FALSE);library('Seurat')"
+
+ENV NGSPERL_VERSION="20230328"
 RUN cd /opt/ngsperl; \
     git pull
