@@ -28,6 +28,8 @@ RUN cd /opt; \
     rm -rf spcount; \
     spcount -h
 
+RUN R -e "BiocManager::install('rmdformats'); library('rmdformats')"
+
 ARG CQSTOOLS_VERSION="1.8.14"  
 RUN cd /opt; \
     wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
@@ -36,9 +38,24 @@ RUN cd /opt; \
     chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
 ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
 
-RUN R -e "BiocManager::install('rmdformats'); library('rmdformats')"
+RUN cd /opt; \
+    git clone https://github.com/brwnj/fastq-join.git; \
+    cd fastq-join; \
+    make; \
+    mv fastq-join /usr/bin; \
+    cd /opt; \
+    rm -rf fastq-join; \
+    fastq-join -h
 
-ENV NGSPERL_VERSION="20230131"
+ENV FASTQC_VERSION="0.12.1"
+RUN cd /opt; \
+    rm -rf FastQC; \
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip; \
+    unzip fastqc_v${FASTQC_VERSION}.zip; \
+    FastQC/fastqc -h
+ENV PATH=/opt/FastQC:$PATH
+
+ENV NGSPERL_VERSION="20230503"
 RUN cd /opt/ngsperl; \
     git pull
 
