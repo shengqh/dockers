@@ -1,7 +1,7 @@
-FROM bioconductor/bioconductor_docker:RELEASE_3_14
+FROM bioconductor/bioconductor_docker:RELEASE_3_16-R-4.2.3
 
-RUN mkdir /scratch
 RUN mkdir /data
+RUN mkdir /nobackup
 
 RUN apt-get update -qq
 RUN apt-get install -y libboost-all-dev
@@ -27,3 +27,4 @@ RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("jso
 
 RUN apt-get install -y libgdal-dev
 RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("rgdal",ask=F)'
+
