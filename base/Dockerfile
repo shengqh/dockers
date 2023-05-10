@@ -1,11 +1,96 @@
-#FROM shengqh/bioinfo:ubuntu20.04_r4.0_java1.8_perl5.30_mono6.12_python3.8
-FROM shengqh/ubuntu20.04_r4.2.2_java11.0.17_perl5.30.0_mono6.12.0.182_python3.8.10:20221127
+FROM shengqh/debian10.2.1_r4.3.0_python3.10.11_java11.0.18_mono6.12.0.182:20230508
 
-RUN pip3 install --upgrade pip; \
-    pip3 install wheel
+RUN pip3 install wheel
 
-RUN apt-get update
-RUN apt-get install -y libgd-dev
+RUN apt-get update && apt-get install -y libgd-dev libzstd-dev
+
+RUN R -e "install.packages('remotes'); library('remotes')" && \
+ R -e 'install.packages("devtools");library(devtools)' && \
+ R -e "install.packages('BiocManager'); library('BiocManager')"
+
+RUN R -e "BiocManager::install('ggplot2'); library('ggplot2')"  && \
+ R -e "BiocManager::install('VennDiagram'); library('VennDiagram')" && \
+ R -e "BiocManager::install('DT'); library('DT')" && \
+ R -e "BiocManager::install('cowplot'); library('cowplot')" && \
+ R -e "BiocManager::install('ggpubr'); library('ggpubr')" && \
+ R -e "BiocManager::install('colorRamps'); library('colorRamps')" && \
+ R -e "BiocManager::install('heatmap3'); library('heatmap3')" && \
+ R -e "BiocManager::install('rmarkdown'); library('rmarkdown')" && \
+ R -e "BiocManager::install('proj4'); library('proj4')" && \
+ R -e "BiocManager::install('Cairo'); library('Cairo')" && \
+ R -e "BiocManager::install('textshaping'); library('textshaping')" && \
+ R -e "BiocManager::install('ragg'); library('ragg')" && \
+ R -e "BiocManager::install('ggalt'); library('ggalt')" && \
+ R -e "BiocManager::install('ggrastr'); library('ggrastr')" && \
+ R -e "BiocManager::install('EnhancedVolcano'); library('EnhancedVolcano')" && \
+ R -e "BiocManager::install('yihui/knitr'); library('knitr')" && \
+ R -e "BiocManager::install('kableExtra'); library('kableExtra')" && \
+ R -e "BiocManager::install('rmdformats'); library('rmdformats')" && \
+ R -e "BiocManager::install('patchwork'); library('patchwork')"  && \
+ R -e "BiocManager::install('cran/XML'); library('XML')" && \
+ R -e "BiocManager::install('pkgdown'); library('pkgdown')" && \
+ R -e "BiocManager::install('stringr', ask=F); library('stringr')" && \
+ R -e "BiocManager::install('rlist', ask=F); library('rlist')" && \
+ R -e "BiocManager::install('reshape2', ask=F); library('reshape2')" && \
+ R -e "BiocManager::install('tidyverse', ask=F); library('tidyverse')" && \
+ R -e "BiocManager::install('ComplexHeatmap', ask=F); library('ComplexHeatmap')" && \
+ R -e "BiocManager::install('DESeq2', ask=F); library('DESeq2')" && \
+ R -e "BiocManager::install('edgeR', ask=F); library('edgeR')" && \
+ R -e "BiocManager::install('xlsx');library('xlsx')" && \
+ R -e "BiocManager::install('shiny');library('shiny')" && \
+ R -e "BiocManager::install('ggExtra');library('ggExtra')" && \
+ R -e "BiocManager::install('hdf5r');library(hdf5r)" && \
+ R -e "install.packages('RCurl');library('RCurl')" && \
+ R -e "install.packages('car');library('car')" && \
+ R -e "BiocManager::install('limma');library('limma')" && \
+ R -e "BiocManager::install('ggdendro');library('ggdendro')" && \
+ R -e "BiocManager::install('formatR');library('formatR')" && \
+ R -e "BiocManager::install('tictoc', ask=FALSE);library('tictoc')" && \
+ R -e "BiocManager::install('testit');library('testit')" && \
+ R -e "BiocManager::install('clustree');library('clustree')" && \
+ R -e "BiocManager::install('mclust');library('mclust')" && \
+ R -e "BiocManager::install('bzhanglab/WebGestaltR', ask=FALSE);library('WebGestaltR')" && \
+ R -e "BiocManager::install('qqconf', ask=FALSE);library('qqconf')" && \
+ R -e "BiocManager::install('cvarrichio/Matrix.utils', force=TRUE, ask=FALSE);library('Matrix.utils')"
+
+RUN pip3 install --no-cache-dir --upgrade \
+    pysam \
+    biopython \
+    pytabix \
+    cutadapt \
+    multiqc
+
+RUN apt-get install -y tabix
+
+ARG NGSPERL_VERSION="20230509"
+RUN cd /opt; \
+    git clone https://github.com/shengqh/ngsperl.git; \
+    bash /opt/ngsperl/install_packages_nosudo.sh
+ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+
+ARG SAMTOOLS_VERSION="1.17"
+RUN cd /opt; \
+    wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
+    tar -jxvf samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
+    cd samtools-${SAMTOOLS_VERSION} ; \
+    ./configure ; \
+    make ; \
+    make install ; \
+    cd .. ; \
+    rm -rf samtools-${SAMTOOLS_VERSION}; \
+    samtools --version
+
+ARG BCFTOOLS_VERSION="1.17"
+RUN cd /opt; \
+    wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
+    tar -jxvf bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
+    cd bcftools-${BCFTOOLS_VERSION} ; \
+    ./configure ; \
+    make ; \
+    make install ; \
+    cd .. ; \
+    rm -rf bcftools-${BCFTOOLS_VERSION}; \
+    bcftools --version
 
 ARG PIGZ_VERSION="2.7"
 RUN cd /opt; \
@@ -19,47 +104,6 @@ RUN cd /opt; \
     rm -rf pigz-${PIGZ_VERSION}; \
     pigz -h
 
-RUN pip3 install cutadapt; \
-    cutadapt --version
-
-RUN pip3 install multiqc; \
-    multiqc --version
-
-RUN pip3 install --no-cache-dir --upgrade \
-    pysam \
-    biopython \
-    pytabix
-
-RUN curl -L http://cpanmin.us | perl - Getopt::Long;
-RUN curl -L http://cpanmin.us | perl - --force Bio::SeqIO;
-RUN curl -L http://cpanmin.us | perl - Algorithm::Loops;
-RUN curl -L http://cpanmin.us | perl - Hash::Merge;
-RUN curl -L http://cpanmin.us | perl - String::Util;
-
-ENV SAMTOOLS_VERSION="1.16.1"
-RUN cd /opt; \
-    wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
-    tar -jxvf samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
-    cd samtools-${SAMTOOLS_VERSION} ; \
-    ./configure ; \
-    make ; \
-    make install ; \
-    cd .. ; \
-    rm -rf samtools-${SAMTOOLS_VERSION}; \
-    samtools --version
-
-ENV BCFTOOLS_VERSION="1.16"
-RUN cd /opt; \
-    wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
-    tar -jxvf bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
-    cd bcftools-${BCFTOOLS_VERSION} ; \
-    ./configure ; \
-    make ; \
-    make install ; \
-    cd .. ; \
-    rm -rf bcftools-${BCFTOOLS_VERSION}; \
-    bcftools --version
-
 ARG FASTQC_VERSION="v0.11.9"
 RUN cd /opt; \
     wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_${FASTQC_VERSION}.zip; \
@@ -67,68 +111,44 @@ RUN cd /opt; \
     rm fastqc_${FASTQC_VERSION}.zip; \
     chmod 755 FastQC/fastqc; \
     sed -i 's/250/5000/g' /opt/FastQC/fastqc
-ENV PATH=/opt/FastQC:$PATH
-RUN fastqc --version                                                                                                                                                                                                                                                                         
 
-ARG SAMBAMBA_VERSION="0.8.2"
-RUN wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}/sambamba-${SAMBAMBA_VERSION}-linux-amd64-static.gz ; \
-    gunzip sambamba-${SAMBAMBA_VERSION}-linux-amd64-static.gz ; \
-    chmod 755 sambamba-${SAMBAMBA_VERSION}-linux-amd64-static ; \
-    mv sambamba-${SAMBAMBA_VERSION}-linux-amd64-static /usr/bin/sambamba ; \
-    sambamba --version
-
-RUN cd /opt; \
-    wget ftp://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/edirect.tar.gz; \
-    tar -xzvf edirect.tar.gz; \
-    rm edirect.tar.gz; \
-    ./edirect/setup.sh; \
-    /opt/edirect/esearch -h
-ENV PATH=/opt/edirect:$PATH
-
-ARG sratoolkit_VERSION="3.0.1"
-RUN cd /opt; \
-    wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/${sratoolkit_VERSION}/sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
-    tar -xzvf sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
-    rm sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; 
-ENV PATH=/opt/sratoolkit.${sratoolkit_VERSION}-ubuntu64/bin:$PATH
-
-RUN mkdir /workspace
-RUN mkdir /data1
-RUN apt-get install -y tabix
-
-RUN R -e 'install.packages("BiocManager");BiocManager::install()'
-RUN R -e "BiocManager::install('remotes'); library('remotes')"
-RUN R -e "BiocManager::install('ggplot2'); library('ggplot2')"
-RUN R -e "BiocManager::install('rmarkdown'); library('rmarkdown')"
-RUN R -e "BiocManager::install('knitr'); library('knitr')"
-RUN R -e "BiocManager::install('patchwork'); library('patchwork')"
-RUN R -e "BiocManager::install('ggExtra'); library('ggExtra')"
-RUN R -e "BiocManager::install('cran/XML'); library('XML')"
-
-RUN apt-get install -y libharfbuzz-dev libfribidi-dev
-
-RUN R -e "BiocManager::install('pkgdown'); library('pkgdown')"
-RUN R -e 'install.packages("devtools");library(devtools)'
-RUN R -e "BiocManager::install('stringr', ask=F); library('stringr')"
-RUN R -e "BiocManager::install('DT', ask=F); library('DT')"
-RUN R -e "BiocManager::install('VennDiagram', ask=F); library('VennDiagram')"
-RUN R -e "BiocManager::install('DESeq2', ask=F); library('DESeq2')"
-RUN R -e "BiocManager::install('edgeR', ask=F); library('edgeR')"
-RUN R -e "BiocManager::install('cowplot', ask=F); library('cowplot')"
-
-RUN apt install -y cmake
-
-RUN R -e "BiocManager::install('ggpubr', ask=F); library('ggpubr')"
-RUN R -e "BiocManager::install('rlist', ask=F); library('rlist')"
-RUN R -e "BiocManager::install('kableExtra', ask=F); library('kableExtra')"
-RUN R -e "BiocManager::install('tidyverse', ask=F); library('tidyverse')"
-
-RUN pip3 install pysam
-
-ARG CQSTOOLS_VERSION="1.8.14"  
+ARG CQSTOOLS_VERSION="1.8.14"
 RUN cd /opt; \
     wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
     unzip cqstools.${CQSTOOLS_VERSION}.zip; \
     rm cqstools.${CQSTOOLS_VERSION}.zip; \
     chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools
-ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
+
+ARG SAMBAMBA_VERSION="0.8.2" #stable version 1.0.0 equals to 0.8.2 
+RUN cd /opt; \
+    wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}/sambamba-${SAMBAMBA_VERSION}-linux-amd64-static.gz; \
+    gunzip sambamba-${SAMBAMBA_VERSION}-linux-amd64-static.gz; \
+    chmod 755 sambamba-${SAMBAMBA_VERSION}-linux-amd64-static; \
+    mv sambamba-${SAMBAMBA_VERSION}-linux-amd64-static /usr/bin/sambamba; \
+    sambamba --version
+
+RUN cd /opt; \
+    wget ftp://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/edirect.tar.gz; \
+    tar -xzvf edirect.tar.gz; \
+    rm edirect.tar.gz
+
+ARG sratoolkit_VERSION="3.0.5"
+RUN cd /opt; \
+    wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/${sratoolkit_VERSION}/sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
+    tar -xzvf sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
+    rm sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; 
+
+ARG PANDOC_VERSION="2.18"
+RUN cd /opt; \
+    wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
+    tar -xzvf pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
+    rm pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz
+
+ARG GSEA_VERSION="4.3.2"
+RUN cd /opt; \
+    wget https://data.broadinstitute.org/gsea-msigdb/gsea/software/desktop/4.3/GSEA_Linux_${GSEA_VERSION}.zip ; \
+    unzip GSEA_Linux_${GSEA_VERSION}.zip ; \
+    rm GSEA_Linux_${GSEA_VERSION}.zip ;
+
+ENV PATH=/opt/GSEA_Linux_${GSEA_VERSION}:/opt/cqstools.${CQSTOOLS_VERSION}:/opt/FastQC:/opt/edirect:/opt/pandoc-${PANDOC_VERSION}/bin:/opt/sratoolkit.${sratoolkit_VERSION}-ubuntu64/bin:$PATH
+RUN fastqc --version && cqstools -h && pandoc --version && esearch -h                                                                                                                                                                                                                                                          

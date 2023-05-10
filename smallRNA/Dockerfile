@@ -1,9 +1,23 @@
-FROM shengqh/cqs_smallrnaseq:20220429
+FROM shengqh/bioinfo_base:20230503
 
-RUN R -e "BiocManager::install('remotes'); library('remotes')"
-RUN R -e "BiocManager::install('yihui/knitr'); library('knitr')"
-RUN R -e "BiocManager::install('kableExtra'); library('kableExtra')"
+RUN R -e "BiocManager::install('vegan')"
 RUN R -e "BiocManager::install()"
+
+ARG BOWTIE_VERSION="1.3.1"
+RUN cd /opt; \
+    wget https://github.com/BenLangmead/bowtie/releases/download/v${BOWTIE_VERSION}/bowtie-${BOWTIE_VERSION}-linux-x86_64.zip; \
+    unzip bowtie-${BOWTIE_VERSION}-linux-x86_64.zip; \
+    rm bowtie-${BOWTIE_VERSION}-linux-x86_64.zip
+ENV PATH=$PATH:/opt/bowtie-${BOWTIE_VERSION}-linux-x86_64
+RUN bowtie --version
+
+ARG BLAST_VERSION="2.13.0"
+RUN cd /opt; \
+    wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLAST_VERSION}/ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; \
+    tar -xzvf ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; \
+    rm ncbi-blast-${BLAST_VERSION}+-x64-linux.tar.gz; 
+ENV PATH=/opt/ncbi-blast-${BLAST_VERSION}+/bin:$PATH
+RUN blastn -version
 
 ARG Krona_VERSION="2.8.1"
 RUN cd /opt; \
@@ -12,31 +26,6 @@ RUN cd /opt; \
     rm v${Krona_VERSION}.tar.gz ; \
     cd Krona-${Krona_VERSION}/KronaTools; \
     ./install.pl
-
-ENV NGSPERL_VERSION="20220616"
-RUN cd /opt; \
-    git clone https://github.com/shengqh/ngsperl.git; \
-    bash /opt/ngsperl/install_packages_nosudo.sh
-ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
-
-ARG SPCOUNT_VERSION="0.0.13"
-RUN cd /opt; \
-    git clone https://github.com/shengqh/spcount; \
-    cd spcount; \
-    pip3 install . ; \
-    cd ..; \
-    rm -rf spcount; \
-    spcount -h
-
-RUN R -e "BiocManager::install('rmdformats'); library('rmdformats')"
-
-ARG CQSTOOLS_VERSION="1.8.14"  
-RUN cd /opt; \
-    wget https://github.com/shengqh/CQS.Tools/releases/download/v${CQSTOOLS_VERSION}/cqstools.${CQSTOOLS_VERSION}.zip; \
-    unzip cqstools.${CQSTOOLS_VERSION}.zip; \
-    rm cqstools.${CQSTOOLS_VERSION}.zip; \
-    chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools; 
-ENV PATH=/opt/cqstools.${CQSTOOLS_VERSION}:$PATH
 
 RUN cd /opt; \
     git clone https://github.com/brwnj/fastq-join.git; \
@@ -47,15 +36,8 @@ RUN cd /opt; \
     rm -rf fastq-join; \
     fastq-join -h
 
-ENV FASTQC_VERSION="0.12.1"
-RUN cd /opt; \
-    rm -rf FastQC; \
-    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip; \
-    unzip fastqc_v${FASTQC_VERSION}.zip; \
-    FastQC/fastqc -h
-ENV PATH=/opt/FastQC:$PATH
+RUN git config --global pull.rebase false
 
 ENV NGSPERL_VERSION="20230503"
-RUN cd /opt/ngsperl; \
-    git pull
+RUN cd /opt/ngsperl && git pull
 

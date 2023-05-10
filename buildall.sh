@@ -10,7 +10,11 @@ cd /home/shengq2/program/dockers/base
 sh build.sh
 sh push.sh
 
-cd /home/shengq2/program/dockers/chipseq
+# cd /home/shengq2/program/dockers/chipseq
+# sh build.sh
+# sh push.sh
+
+cd /home/shengq2/program/dockers/scRNA
 sh build.sh
 sh push.sh
 
