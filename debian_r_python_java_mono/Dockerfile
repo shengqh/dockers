@@ -62,4 +62,10 @@ RUN apt install ca-certificates gnupg && \
     apt install -y mono-devel && \
     mono --version
 
-RUN apt-get install -y libv8-dev
+RUN apt-get install -y libv8-dev libgsl-dev
+
+RUN apt-get install -y software-properties-common
+RUN apt-get install -y libpoppler-cpp-dev
+
+RUN R -e "install.packages('BiocManager', force=TRUE, ask=FALSE);library('BiocManager')"
+RUN R -e "BiocManager::install('jsonlite', force=TRUE, ask=FALSE);library('jsonlite')"

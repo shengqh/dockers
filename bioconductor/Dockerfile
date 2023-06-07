@@ -1,4 +1,4 @@
-FROM bioconductor/bioconductor_docker:RELEASE_3_16-R-4.2.3
+FROM bioconductor/bioconductor_docker:RELEASE_3_17-R-4.3.0
 
 RUN mkdir /data
 RUN mkdir /nobackup
@@ -10,21 +10,17 @@ RUN apt-get install -y software-properties-common
 RUN apt-get update
 RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test
 RUN apt-get install -y g++-11
-RUN apt-get install -y libomp-dev
-RUN apt-get install -y libcurl4-openssl-dev 
-RUN apt-get install -y libcurl4-gnutls-dev
-RUN apt-get install -y libssl-dev
-RUN apt-get install -y libhdf5-dev
-RUN apt-get install -y librtmp-dev 
-RUN apt-get install -y libfontconfig1-dev 
-RUN apt-get install -y libxml2-dev
+RUN apt-get install -y libomp-dev \
+  libcurl4-openssl-dev \
+  librtmp-dev
 RUN apt-get install -y python3-pip
 RUN pip3 install igraph
 
-RUN Rscript --slave --no-save --no-restore-history -e 'install.packages("languageserver")'
+RUN Rscript --slave --no-save --no-restore-history -e 'install.packages("languageserver");library("languageserver")'
 RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install(ask=F)'
-RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("jsonlite",ask=F)'
+RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("jsonlite",ask=F);library("jsonlite")'
+RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("rgdal",ask=F);library("rgdal")'
 
-RUN apt-get install -y libgdal-dev
-RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("rgdal",ask=F)'
+RUN pip3 install macs2 && macs2 --version
 
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/jvm/java-11-openjdk-amd64/lib/server

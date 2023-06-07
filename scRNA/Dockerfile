@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo_base:20230509
+FROM shengqh/bioinfo_base:20230514
 
 ENV SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
 RUN pip3 install pandas scipy numpy seaborn scikit-learn umap-learn install GMM-demux pysam cna scrublet
@@ -31,9 +31,12 @@ RUN R -e "BiocManager::install('SeuratObject', ask=FALSE);library('SeuratObject'
  R -e "BiocManager::install('JiaLiVUMC/scMRMA', ask=FALSE);library('scMRMA')" && \
  R -e "BiocManager::install('biovizBase', ask=FALSE);library('biovizBase')" && \
  R -e "BiocManager::install('EnsDb.Hsapiens.v86', ask=FALSE);library('EnsDb.Hsapiens.v86')" && \
- R -e "devtools::install_github('GreenleafLab/ArchR', ref='master', repos = BiocManager::repositories(), ask=FALSE)"
+ R -e "devtools::install_github('GreenleafLab/ArchR', ref='master', repos = BiocManager::repositories(), ask=FALSE);library('ArchR')"
 
-ARG scDemultiplex_VERSION="20230116_v2"
+RUN R -e "BiocManager::install('bimberlab/cellhashR', ask=FALSE);library('cellhashR')"
+RUN R -e "BiocManager::install('immunogenomics/presto', ask=FALSE);library('presto')"
+
+ARG scDemultiplex_VERSION="20230523"
 RUN R -e "BiocManager::install('shengqh/scDemultiplex', ask=FALSE);library('scDemultiplex')"
 
 RUN cd /opt; \
@@ -43,4 +46,3 @@ RUN cd /opt; \
 ENV PATH=/opt/strelka-2.9.10.centos6_x86_64/bin/:$PATH
 
 COPY irtools.centos /usr/bin/irtools
-
