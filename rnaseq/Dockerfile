@@ -19,6 +19,11 @@ RUN cd /opt; \
     rm salmon-1.10.0_linux_x86_64.tar.gz ;
 ENV PATH=/opt/salmon-latest_linux_x86_64/bin:$PATH
 
-ENV NGSPERL_VERSION="20230305"
+ARG TODAY="20230607"
+RUN R -e "BiocManager::install(ask=FALSE)"
+
+RUN R -e "BiocManager::install('kevinblighe/EnhancedVolcano', ask=FALSE)"
+
+ARG NGSPERL_VERSION="20230607"
 RUN cd /opt/ngsperl; \
     git pull
