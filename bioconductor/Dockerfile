@@ -24,3 +24,5 @@ RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("rgd
 RUN pip3 install macs2 && macs2 --version
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/jvm/java-11-openjdk-amd64/lib/server
+
+RUN apt-get install -y xdg-utils --fix-missing

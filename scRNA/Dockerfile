@@ -46,3 +46,5 @@ RUN cd /opt; \
 ENV PATH=/opt/strelka-2.9.10.centos6_x86_64/bin/:$PATH
 
 COPY irtools.centos /usr/bin/irtools
+
+RUN R -e "BiocManager::install('demuxmix', ask=FALSE);library('demuxmix')"
