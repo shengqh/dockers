@@ -62,13 +62,7 @@ RUN pip3 install --no-cache-dir --upgrade \
 
 RUN apt-get install -y tabix
 
-ARG NGSPERL_VERSION="20230509"
-RUN cd /opt; \
-    git clone https://github.com/shengqh/ngsperl.git; \
-    bash /opt/ngsperl/install_packages_nosudo.sh
-ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
-
-ARG SAMTOOLS_VERSION="1.17"
+ARG SAMTOOLS_VERSION="1.18"
 RUN cd /opt; \
     wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
     tar -jxvf samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
@@ -80,7 +74,7 @@ RUN cd /opt; \
     rm -rf samtools-${SAMTOOLS_VERSION}; \
     samtools --version
 
-ARG BCFTOOLS_VERSION="1.17"
+ARG BCFTOOLS_VERSION="1.18"
 RUN cd /opt; \
     wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
     tar -jxvf bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
@@ -92,7 +86,7 @@ RUN cd /opt; \
     rm -rf bcftools-${BCFTOOLS_VERSION}; \
     bcftools --version
 
-ARG PIGZ_VERSION="2.7"
+ARG PIGZ_VERSION="2.8"
 RUN cd /opt; \
     wget https://zlib.net/pigz/pigz-${PIGZ_VERSION}.tar.gz ; \
     tar -xzvf pigz-${PIGZ_VERSION}.tar.gz; \
@@ -104,7 +98,7 @@ RUN cd /opt; \
     rm -rf pigz-${PIGZ_VERSION}; \
     pigz -h
 
-ARG FASTQC_VERSION="v0.11.9"
+ARG FASTQC_VERSION="v0.12.1"
 RUN cd /opt; \
     wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_${FASTQC_VERSION}.zip; \
     unzip fastqc_${FASTQC_VERSION}.zip; \
@@ -119,7 +113,7 @@ RUN cd /opt; \
     rm cqstools.${CQSTOOLS_VERSION}.zip; \
     chmod 755 cqstools.${CQSTOOLS_VERSION}/cqstools
 
-ARG SAMBAMBA_VERSION="0.8.2" #stable version 1.0.0 equals to 0.8.2 
+ARG SAMBAMBA_VERSION="1.0.1"
 RUN cd /opt; \
     wget https://github.com/biod/sambamba/releases/download/v${SAMBAMBA_VERSION}/sambamba-${SAMBAMBA_VERSION}-linux-amd64-static.gz; \
     gunzip sambamba-${SAMBAMBA_VERSION}-linux-amd64-static.gz; \
@@ -132,13 +126,13 @@ RUN cd /opt; \
     tar -xzvf edirect.tar.gz; \
     rm edirect.tar.gz
 
-ARG sratoolkit_VERSION="3.0.5"
+ARG sratoolkit_VERSION="3.0.7"
 RUN cd /opt; \
     wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/${sratoolkit_VERSION}/sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
     tar -xzvf sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
     rm sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; 
 
-ARG PANDOC_VERSION="2.18"
+ARG PANDOC_VERSION="3.1.8"
 RUN cd /opt; \
     wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
     tar -xzvf pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
@@ -152,3 +146,18 @@ RUN cd /opt; \
 
 ENV PATH=/opt/GSEA_Linux_${GSEA_VERSION}:/opt/cqstools.${CQSTOOLS_VERSION}:/opt/FastQC:/opt/edirect:/opt/pandoc-${PANDOC_VERSION}/bin:/opt/sratoolkit.${sratoolkit_VERSION}-ubuntu64/bin:$PATH
 RUN fastqc --version && cqstools -h && pandoc --version && esearch -h                                                                                                                                                                                                                                                          
+
+RUN pip3 install --no-cache-dir --upgrade cutadapt==4.5
+
+RUN R -e "BiocManager::install(ask=FALSE)"
+
+RUN R -e "BiocManager::install('kevinblighe/EnhancedVolcano', ask=FALSE);library('EnhancedVolcano')"
+RUN R -e "BiocManager::install('rmdformats', ask=FALSE);library('rmdformats')"
+RUN R -e "BiocManager::install('formatR', ask=FALSE);library('formatR')"
+RUN R -e "BiocManager::install('rjson', ask=FALSE);library('rjson')"
+
+ARG NGSPERL_VERSION="20231016"
+RUN cd /opt; \
+    git clone https://github.com/shengqh/ngsperl.git; \
+    bash /opt/ngsperl/install_packages_nosudo.sh
+ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB

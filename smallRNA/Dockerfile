@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo_base:20230503
+FROM shengqh/bioinfo_base:20231016
 
 RUN R -e "BiocManager::install('vegan')"
 RUN R -e "BiocManager::install()"
@@ -38,6 +38,6 @@ RUN cd /opt; \
 
 RUN git config --global pull.rebase false
 
-ENV NGSPERL_VERSION="20230503"
+ENV NGSPERL_VERSION="20231016"
 RUN cd /opt/ngsperl && git pull
 

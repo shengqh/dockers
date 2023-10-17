@@ -1,6 +1,6 @@
-FROM shengqh/bioinfo_base:20221127
+FROM shengqh/bioinfo_base:20231016
 
-ENV BOWTIE2_VERSION="2.4.1"
+ENV BOWTIE2_VERSION="2.5.2"
 ENV PATH=/opt/bowtie2-${BOWTIE2_VERSION}-linux-x86_64:$PATH
 RUN cd /opt; \
     wget https://github.com/BenLangmead/bowtie2/releases/download/v${BOWTIE2_VERSION}/bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip; \

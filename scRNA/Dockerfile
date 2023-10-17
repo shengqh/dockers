@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo_base:20230514
+FROM shengqh/bioinfo_base:20231016
 
 ENV SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
 RUN pip3 install pandas scipy numpy seaborn scikit-learn umap-learn install GMM-demux pysam cna scrublet
@@ -36,9 +36,6 @@ RUN R -e "BiocManager::install('SeuratObject', ask=FALSE);library('SeuratObject'
 RUN R -e "BiocManager::install('bimberlab/cellhashR', ask=FALSE);library('cellhashR')"
 RUN R -e "BiocManager::install('immunogenomics/presto', ask=FALSE);library('presto')"
 
-ARG scDemultiplex_VERSION="20230523"
-RUN R -e "BiocManager::install('shengqh/scDemultiplex', ask=FALSE);library('scDemultiplex')"
-
 RUN cd /opt; \
     wget https://github.com/Illumina/strelka/releases/download/v2.9.10/strelka-2.9.10.centos6_x86_64.tar.bz2; \
     tar xvjf strelka-2.9.10.centos6_x86_64.tar.bz2; \
@@ -48,3 +45,8 @@ ENV PATH=/opt/strelka-2.9.10.centos6_x86_64/bin/:$PATH
 COPY irtools.centos /usr/bin/irtools
 
 RUN R -e "BiocManager::install('demuxmix', ask=FALSE);library('demuxmix')"
+
+ARG scDemultiplex_VERSION="20231016"
+RUN R -e "BiocManager::install('shengqh/scDemultiplex', ask=FALSE);library('scDemultiplex')"
+
+RUN R -e "BiocManager::install('NMikolajewicz/scMiko', ask=FALSE);library('scMiko')"

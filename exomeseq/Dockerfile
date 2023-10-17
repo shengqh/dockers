@@ -1,5 +1,8 @@
 FROM shengqh/bioinfo:base
 
+RUN apt-get update
+RUN apt-get install -y libcairo2-dev
+
 ENV BWA_VERSION="0.7.17"
 RUN wget http://downloads.sourceforge.net/project/bio-bwa/bwa-${BWA_VERSION}.tar.bz2; \
     tar -jxvf bwa-${BWA_VERSION}.tar.bz2 ; \
@@ -47,12 +50,8 @@ RUN R -e "BiocManager::install('R.utils');library('R.utils')"
 RUN R -e "BiocManager::install('dendextend');library('dendextend')"
 RUN R -e "BiocManager::install(c('Biostrings', 'Rsamtools', 'biomaRt', 'VennDiagram', 'cowplot'))"
 RUN R -e "BiocManager::install('mclust');library('mclust')"
-
-RUN apt-get update
-RUN apt-get install -y libcairo2-dev
 RUN R -e "BiocManager::install('Cairo');library('Cairo')"
 RUN R -e "BiocManager::install('ComplexHeatmap');library('ComplexHeatmap')"
-
 RUN R -e "BiocManager::install('cn.mops');library('cn.mops')"
 RUN R -e "BiocManager::install('DNAcopy');library('DNAcopy')"
 RUN R -e "BiocManager::install('data.table');library('data.table')"
@@ -67,6 +66,8 @@ RUN R -e "BiocManager::install('htmltools');library('htmltools')"
 RUN R -e "BiocManager::install('stringr');library('stringr')"
 RUN R -e "BiocManager::install('karyoploteR');library('karyoploteR')"
 
-ENV multiqc_ver=1.12
-RUN pip3 install --no-cache-dir --upgrade multiqc
-RUN multiqc --version
+RUN cd /usr/bin; \ 
+    wget https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools.static.binary; \
+    mv bedtools.static.binary bedtools; \
+    chmod 755 bedtools; \
+    bedtools -h
