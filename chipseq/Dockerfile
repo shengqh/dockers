@@ -75,3 +75,4 @@ RUN R -e "BiocManager::install()"
 ENV ChIPQC_VERSION="v20230122"
 RUN R -e 'BiocManager::install("shengqh/ChIPQC");library(ChIPQC)'
 
+RUN R -e "install.packages('tidyverse');library('tidyverse')"

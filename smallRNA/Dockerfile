@@ -1,6 +1,19 @@
 FROM shengqh/bioinfo_base:20231016
 
-RUN R -e "BiocManager::install('vegan')"
+RUN apt-get update && \
+  apt-get install -y lftp unzip libsqlite3-dev libproj-dev libcairo2-dev libharfbuzz-dev libfribidi-dev
+
+RUN pip3 install --no-cache-dir --upgrade pip
+RUN pip3 install --no-cache-dir --upgrade pysam \
+    biopython \
+    pytabix \
+    pandas \
+    seaborn 
+
+RUN git config --global pull.rebase false
+
+RUN R -e "install.packages('tidyverse');library('tidyverse')"
+RUN R -e "BiocManager::install(c('vegan', 'remotes', 'yihui/knitr', 'genefilter'))"
 RUN R -e "BiocManager::install()"
 
 ARG BOWTIE_VERSION="1.3.1"
@@ -36,8 +49,15 @@ RUN cd /opt; \
     rm -rf fastq-join; \
     fastq-join -h
 
-RUN git config --global pull.rebase false
-
-ENV NGSPERL_VERSION="20231016"
+ENV NGSPERL_VERSION="20231103"
 RUN cd /opt/ngsperl && git pull
+RUN R -e "BiocManager::install(ask=FALSE)"
 
+ARG SPCOUNT_VERSION="0.0.9"
+RUN cd /opt; \
+    git clone https://github.com/shengqh/spcount; \
+    cd spcount; \
+    pip3 install . ; \
+    cd ..; \
+    rm -rf spcount; \
+    spcount -h

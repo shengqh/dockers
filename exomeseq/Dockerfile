@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo:base
+FROM shengqh/bioinfo_base:20231016
 
 RUN apt-get update
 RUN apt-get install -y libcairo2-dev
@@ -59,15 +59,32 @@ RUN R -e "BiocManager::install('reshape2');library('reshape2')"
 RUN R -e "BiocManager::install('knitr');library('knitr')"
 RUN R -e "BiocManager::install('rmarkdown');library('rmarkdown')"
 RUN R -e "BiocManager::install('kableExtra');library('kableExtra')"
-RUN R -e "BiocManager::install('tidyverse');library('tidyverse')"
 RUN R -e "BiocManager::install('DT');library('DT')"
 RUN R -e "BiocManager::install('RCurl');library('RCurl')"
 RUN R -e "BiocManager::install('htmltools');library('htmltools')"
 RUN R -e "BiocManager::install('stringr');library('stringr')"
 RUN R -e "BiocManager::install('karyoploteR');library('karyoploteR')"
+#RUN R -e "BiocManager::install('tidyverse');library('tidyverse')"#tidyverse is very hard to install.
 
 RUN cd /usr/bin; \ 
     wget https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools.static.binary; \
     mv bedtools.static.binary bedtools; \
     chmod 755 bedtools; \
     bedtools -h
+
+RUN cd /opt && \
+  curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.10.tar.gz -o trim_galore.tar.gz && \
+  tar xvzf trim_galore.tar.gz && \
+  rm trim_galore.tar.gz && \
+  TrimGalore-0.6.10/trim_galore --help
+
+ENV PATH=/opt/TrimGalore-0.6.10:$PATH
+
+ENV BWA_VERSION="0.7.17"
+RUN cd /opt && \
+    git clone https://github.com/lh3/bwa.git && \
+    cd bwa && \
+    make && \
+    mv bwa /usr/bin && \
+    cd .. && \
+    rm -rf bwa

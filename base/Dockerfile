@@ -161,3 +161,5 @@ RUN cd /opt; \
     git clone https://github.com/shengqh/ngsperl.git; \
     bash /opt/ngsperl/install_packages_nosudo.sh
 ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+
+RUN R -e "install.packages('tidyverse');library('tidyverse')"
