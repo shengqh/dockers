@@ -33,7 +33,6 @@ RUN R -e "BiocManager::install('singleCellTK', ask=FALSE);library('singleCellTK'
     R -e "BiocManager::install('biovizBase', ask=FALSE);library('biovizBase')" && \
     R -e "BiocManager::install('EnsDb.Hsapiens.v86', ask=FALSE);library('EnsDb.Hsapiens.v86')"
 RUN R -e "devtools::install_github('GreenleafLab/ArchR', ref='master', repos = BiocManager::repositories(), ask=FALSE);library('ArchR')"
-RUN R -e "BiocManager::install('bimberlab/cellhashR', ask=FALSE);library('cellhashR')"
 RUN R -e "BiocManager::install('immunogenomics/presto', ask=FALSE);library('presto')"
 RUN R -e "BiocManager::install('demuxmix', ask=FALSE);library('demuxmix')"
 
@@ -54,3 +53,8 @@ ARG scDemultiplex_VERSION="20231016"
 RUN R -e "BiocManager::install('shengqh/scDemultiplex', ask=FALSE);library('scDemultiplex')"
 
 RUN pip install --quiet scvi-colab
+RUN pip install --quiet sccoda
+RUN pip install --upgrade pip
+
+# namespace ‘Seurat’ 5.0.1 is being loaded, but <= 4.4.0 is required
+#RUN R -e "devtools::install_github(repo = 'bimberlab/cellhashR', ref = 'master', dependencies = TRUE, upgrade = 'always')"

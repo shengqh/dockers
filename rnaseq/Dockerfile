@@ -91,3 +91,5 @@ RUN cd /opt; \
     rm v0.15.3.tar.gz;
 ENV PATH=/opt/FastQ-Screen-0.15.3:$PATH
 
+RUN pip install umi_tools
+
