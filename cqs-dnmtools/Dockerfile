@@ -1,7 +1,6 @@
-
-
 # Build htslib from source
-FROM alpine:latest
+FROM python:alpine3.19
+
 RUN apk update 
 WORKDIR /app
 
@@ -28,6 +27,8 @@ RUN mkdir /app/samtools &&  cd /app/samtools \
   && tar -xf ${SAMDIR}.tar.bz2 \
   && cd /app/samtools/${SAMDIR} \
   &&  ./configure && make && make install 
+
+RUN pip3 install --no-cache --upgrade pysam
 
 ENV DNM=1.4.2
 ENV DNMDIR=dnmtools-${DNM}
@@ -57,3 +58,4 @@ COPY wigToBigWig /usr/bin
 COPY bedToBigBed /usr/bin
 
 RUN apk add R
+

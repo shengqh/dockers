@@ -56,5 +56,8 @@ RUN pip install --quiet scvi-colab
 RUN pip install --quiet sccoda
 RUN pip install --upgrade pip
 
+RUN R -e "BiocManager::install('scCustomize', ask=FALSE);library('scCustomize')"
+
 # namespace ‘Seurat’ 5.0.1 is being loaded, but <= 4.4.0 is required
 #RUN R -e "devtools::install_github(repo = 'bimberlab/cellhashR', ref = 'master', dependencies = TRUE, upgrade = 'always')"
+
