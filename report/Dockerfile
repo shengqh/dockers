@@ -8,4 +8,16 @@ RUN mv /usr/lib/R/site-library/* /usr/local/lib/R/site-library; \
     
 RUN R -e "BiocManager::install('formatR');library('formatR')"
 RUN R -e "BiocManager::install('rjson');library('rjson')"
+RUN R -e "BiocManager::install('ggpubr');library('ggpubr')"
+RUN R -e "BiocManager::install('htmlTable');library('htmlTable')"
+RUN R -e "BiocManager::install('ggExtra');library('ggExtra')"
+
+RUN apt-get update --allow-releaseinfo-change && apt-get install -y libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+
+RUN R -e "BiocManager::install('flextable');library('flextable')"
+
 RUN R -e "BiocManager::install(ask=FALSE)"
+
+RUN apt-get install -y libv8-dev
+RUN R -e "BiocManager::install('gtsummary');library('gtsummary')"
+
