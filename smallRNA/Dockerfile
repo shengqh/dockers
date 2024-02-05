@@ -53,7 +53,7 @@ ENV NGSPERL_VERSION="20231103"
 RUN cd /opt/ngsperl && git pull
 RUN R -e "BiocManager::install(ask=FALSE)"
 
-ARG SPCOUNT_VERSION="0.0.9"
+ARG SPCOUNT_VERSION="0.0.16"
 RUN cd /opt; \
     git clone https://github.com/shengqh/spcount; \
     cd spcount; \
