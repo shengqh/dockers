@@ -1,6 +1,6 @@
 FROM litd/docker-cutruntools:v202201
 
-RUN cd /opt/CUT-RUNTools-2.0/ && git pull && chmod 755 *.sh */*.sh */*/*.sh
+RUN cd /opt/CUT-RUNTools-2.0/ && git reset --hard && git pull && chmod 755 *.sh */*.sh */*/*.sh
 
 RUN rm -f /opt/conda/envs/app/bin/R /opt/conda/envs/app/bin/Rscript
 
@@ -11,3 +11,8 @@ RUN apt-get update --fix-missing && \
     /usr/bin/Rscript /opt/CUT-RUNTools-2.0/install/r-pkgs-install.r
 
 RUN R -e ".libPaths()"
+
+RUN apt-get install -y ghostscript
+
+RUN cd /opt && git clone https://github.com/FredHutch/SEACR.git
+
