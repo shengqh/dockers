@@ -61,3 +61,14 @@ RUN R -e "BiocManager::install('scCustomize', ask=FALSE);library('scCustomize')"
 # namespace ‘Seurat’ 5.0.1 is being loaded, but <= 4.4.0 is required
 #RUN R -e "devtools::install_github(repo = 'bimberlab/cellhashR', ref = 'master', dependencies = TRUE, upgrade = 'always')"
 
+RUN R -e 'BiocManager::install("TFBSTools", type = "source", force = TRUE);library("TFBSTools")'
+
+RUN R -e 'BiocManager::install("satijalab/seurat");library("Seurat")'
+RUN R -e 'BiocManager::install("satijalab/seurat-data");library("SeuratData")'
+RUN R -e 'BiocManager::install("stuart-lab/signac");library("Signac")'
+
+RUN R -e 'BiocManager::install("gtsummary");library("gtsummary")'
+RUN R -e 'BiocManager::install("flextable");library("flextable")'
+
+RUN R -e 'BiocManager::install("BSgenome.Hsapiens.UCSC.hg38");library("BSgenome.Hsapiens.UCSC.hg38")'
+RUN R -e 'BiocManager::install("satijalab/azimuth");library("Azimuth")'
