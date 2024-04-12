@@ -1,7 +1,4 @@
-FROM bioconductor/bioconductor_docker:RELEASE_3_17-R-4.3.0
-
-RUN mkdir /data
-RUN mkdir /nobackup
+FROM bioconductor/bioconductor_docker:RELEASE_3_18
 
 RUN apt-get update -qq
 RUN apt-get install -y libboost-all-dev
@@ -19,9 +16,7 @@ RUN pip3 install igraph
 RUN Rscript --slave --no-save --no-restore-history -e 'install.packages("languageserver");library("languageserver")'
 RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install(ask=F)'
 RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("jsonlite",ask=F);library("jsonlite")'
-RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("rgdal",ask=F);library("rgdal")'
-
-RUN pip3 install macs2 && macs2 --version
+RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install("cran/rgdal",ask=F);library("rgdal")'
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/jvm/java-11-openjdk-amd64/lib/server
 

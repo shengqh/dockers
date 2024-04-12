@@ -1,6 +1,6 @@
 FROM shengqh/bioinfo_base:20231016
 
-ENV BOWTIE2_VERSION="2.5.2"
+ENV BOWTIE2_VERSION="2.5.3"
 ENV PATH=/opt/bowtie2-${BOWTIE2_VERSION}-linux-x86_64:$PATH
 RUN cd /opt; \
     wget https://github.com/BenLangmead/bowtie2/releases/download/v${BOWTIE2_VERSION}/bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip; \
@@ -76,3 +76,11 @@ ENV ChIPQC_VERSION="v20230122"
 RUN R -e 'BiocManager::install("shengqh/ChIPQC");library(ChIPQC)'
 
 RUN R -e "install.packages('tidyverse');library('tidyverse')"
+
+ENV bedtools_ver="2.31.1"
+RUN cd /opt && \
+    wget https://github.com/arq5x/bedtools2/releases/download/v${bedtools_ver}/bedtools-${bedtools_ver}.tar.gz && \
+    tar -xf bedtools-${bedtools_ver}.tar.gz && rm bedtools-${bedtools_ver}.tar.gz && \
+    cd bedtools2 && \
+    make && \
+    make install
