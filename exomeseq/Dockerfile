@@ -3,11 +3,13 @@ FROM shengqh/bioinfo_base:20231016
 RUN apt-get update
 RUN apt-get install -y libcairo2-dev
 
-ENV BWA_VERSION="0.7.17"
-RUN wget http://downloads.sourceforge.net/project/bio-bwa/bwa-${BWA_VERSION}.tar.bz2; \
-    tar -jxvf bwa-${BWA_VERSION}.tar.bz2 ; \
+ENV BWA_VERSION="0.7.18"
+RUN cd \opt; \
+    wget https://github.com/lh3/bwa/archive/refs/tags/v${BWA_VERSION}.tar.gz; \
+    tar -xzvf v${BWA_VERSION}.tar.gz ; \
     cd bwa-${BWA_VERSION}; \
     make; \
+    make install; \
     cp bwa /usr/bin ; \
     cd .. ; \
     rm -rf bwa-${BWA_VERSION}
@@ -18,7 +20,7 @@ RUN mkdir /opt/annovar
 ADD annovar /opt/annovar
 ENV PATH=/opt/annovar:$PATH
 
-ENV Vcfanno_VERSION="0.3.2"
+ENV Vcfanno_VERSION="0.3.5"
 RUN wget https://github.com/brentp/vcfanno/releases/download/v${Vcfanno_VERSION}/vcfanno_linux64 ; \
     chmod 755 vcfanno_linux64 ; \
     mv vcfanno_linux64 /usr/bin/vcfanno
@@ -64,6 +66,9 @@ RUN R -e "BiocManager::install('RCurl');library('RCurl')"
 RUN R -e "BiocManager::install('htmltools');library('htmltools')"
 RUN R -e "BiocManager::install('stringr');library('stringr')"
 RUN R -e "BiocManager::install('karyoploteR');library('karyoploteR')"
+RUN R -e "BiocManager::install('dplyr');library('dplyr')"
+RUN R -e "BiocManager::install('tibble');library('tibble')"
+
 #RUN R -e "BiocManager::install('tidyverse');library('tidyverse')"#tidyverse is very hard to install.
 
 RUN cd /usr/bin; \ 
@@ -80,11 +85,7 @@ RUN cd /opt && \
 
 ENV PATH=/opt/TrimGalore-0.6.10:$PATH
 
-ENV BWA_VERSION="0.7.17"
-RUN cd /opt && \
-    git clone https://github.com/lh3/bwa.git && \
-    cd bwa && \
-    make && \
-    mv bwa /usr/bin && \
-    cd .. && \
-    rm -rf bwa
+RUN pip3 install fastqsplitter
+
+#use old version of BiocFileCache (2.8.0) will cause error in getBM with useCache=TRUE
+RUN R -e "BiocManager::install('Bioconductor/BiocFileCache', force=TRUE);packageVersion('BiocFileCache')"
