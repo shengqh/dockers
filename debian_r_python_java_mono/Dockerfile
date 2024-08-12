@@ -1,4 +1,4 @@
-FROM python:3.10.11
+FROM python:3.12.4
 
 RUN apt update && apt install -y apt-utils && apt upgrade -y
 RUN pip install --upgrade pip
@@ -37,16 +37,20 @@ RUN apt-get install -y \
   lftp \
   unzip \
   default-jre \
-  default-jdk
+  default-jdk \
+  libv8-dev \
+  libgsl-dev \
+  software-properties-common \
+  libpoppler-cpp-dev
 
 RUN gpg --keyserver keyserver.ubuntu.com --recv-key '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
 RUN gpg --armor --export '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7' | tee /etc/apt/trusted.gpg.d/cran_debian_key.asc
-RUN echo "deb http://cloud.r-project.org/bin/linux/debian bullseye-cran40/" | tee /etc/apt/sources.list.d/r.list
+RUN echo "deb http://cloud.r-project.org/bin/linux/debian bookworm-cran40/" | tee /etc/apt/sources.list.d/r.list
 RUN apt update; apt install -y r-base; R --version
 
 RUN rm -rf /usr/local/lib/R/site-library; ln -s /usr/lib/R/site-library /usr/local/lib/R/site-library
 
-ENV NGSPERL_VERSION="20230503"
+ENV NGSPERL_VERSION="20240614"
 RUN cd /opt; \
     git clone https://github.com/shengqh/ngsperl.git; \
     bash /opt/ngsperl/install_packages_nosudo.sh
@@ -54,18 +58,12 @@ ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
 
 RUN apt-get install -y libgdiplus
 
-#20230503: mono
 RUN apt install ca-certificates gnupg && \
     gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
     echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
     apt update && \
     apt install -y mono-devel && \
     mono --version
-
-RUN apt-get install -y libv8-dev libgsl-dev
-
-RUN apt-get install -y software-properties-common
-RUN apt-get install -y libpoppler-cpp-dev
 
 RUN R -e "install.packages('BiocManager', force=TRUE, ask=FALSE);library('BiocManager')"
 RUN R -e "BiocManager::install('jsonlite', force=TRUE, ask=FALSE);library('jsonlite')"

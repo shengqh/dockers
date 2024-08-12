@@ -20,4 +20,6 @@ RUN R -e "BiocManager::install(ask=FALSE)"
 
 RUN apt-get install -y libv8-dev
 RUN R -e "BiocManager::install('gtsummary');library('gtsummary')"
+RUN R -e "BiocManager::install('ComplexHeatmap');library('ComplexHeatmap')"
+
 

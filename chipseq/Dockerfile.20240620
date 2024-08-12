@@ -84,9 +84,3 @@ RUN cd /opt && \
     cd bedtools2 && \
     make && \
     make install
-
-RUN R -e "BiocManager::install('metapod');library('metapod')"
-RUN cd /opt && \
-    wget https://bioconductor.org/packages/devel/bioc/src/contrib/csaw_1.39.0.tar.gz && \
-    R -e "install.packages('csaw_1.39.0.tar.gz', repos = NULL, type='source');library('csaw')" && \
-    rm csaw_1.39.0.tar.gz

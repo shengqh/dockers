@@ -1,42 +1,26 @@
-FROM shengqh/bioinfo_base:20231016
+FROM shengqh/bioinfo_base:20240616
 
 RUN pip3 install --upgrade pip
 
-RUN apt-get update && apt-get install -y libcairo2-dev
+RUN apt-get update && apt-get install -y libcairo2-dev xxd
 
 RUN pip3 install --no-cache-dir --upgrade \
     HTSeq \
     numpy
 
 RUN R -e "BiocManager::install('igordot/msigdbr', ask=FALSE);library('msigdbr')"
-
 RUN R -e "BiocManager::install(c('RColorBrewer', 'cowplot', 'grid', 'lattice', 'plyr', 'reshape', 'scales', 'preprocessCore', 'edgeR', 'DT', 'kableExtra'))"
-RUN R -e "BiocManager::install('tidyverse');library('tidyverse')"
 RUN R -e "BiocManager::install('TCGAbiolinks');library('TCGAbiolinks')"
-RUN R -e "BiocManager::install('WebGestaltR');library('WebGestaltR')"
-RUN R -e "BiocManager::install()"
-
 RUN R -e "BiocManager::install('heatmap3');library('heatmap3')"
 RUN R -e "BiocManager::install('umap');library('umap')"
 RUN R -e "BiocManager::install('magrittr');library('magrittr')"
 
-RUN R -e "BiocManager::install('areyesq89/DEXSeq');library('DEXSeq')"
-RUN echo '#!/usr/bin/python3' > /usr/bin/dexseq_count.py; \
-    cat /usr/local/lib/R/site-library/DEXSeq/python_scripts/dexseq_count.py >> /usr/bin/dexseq_count.py; \
-    chmod 755 /usr/bin/dexseq_count.py; \
-    echo '#!/usr/bin/python3' > /usr/bin/dexseq_prepare_annotation.py; \
-    cat /usr/local/lib/R/site-library/DEXSeq/python_scripts/dexseq_prepare_annotation.py >> /usr/bin/dexseq_prepare_annotation.py; \
-    chmod 755 /usr/bin/dexseq_prepare_annotation.py
-
-RUN R -e "BiocManager::install(ask=FALSE)"
-
+ARG salmon_VERSION="1.10.0"
 RUN cd /opt; \
-    wget https://github.com/COMBINE-lab/salmon/releases/download/v1.10.0/salmon-1.10.0_linux_x86_64.tar.gz ; \
-    tar -xzvf salmon-1.10.0_linux_x86_64.tar.gz ; \
-    rm salmon-1.10.0_linux_x86_64.tar.gz ;
+    wget https://github.com/COMBINE-lab/salmon/releases/download/v${salmon_VERSION}/salmon-${salmon_VERSION}_linux_x86_64.tar.gz ; \
+    tar -xzvf salmon-${salmon_VERSION}_linux_x86_64.tar.gz ; \
+    rm salmon-${salmon_VERSION}_linux_x86_64.tar.gz
 ENV PATH=/opt/salmon-latest_linux_x86_64/bin:$PATH
-
-RUN apt-get install -y xxd
 
 ARG STAR_VERSION="2.7.11a"
 RUN cd /opt; \
@@ -48,18 +32,6 @@ RUN cd /opt; \
     cd ../..; \
     rm -rf STAR-${STAR_VERSION} ${STAR_VERSION}.tar.gz
 RUN STAR --version
-
-ARG FASTQC_VERSION="v0.12.1"
-RUN cd /opt; \
-    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_${FASTQC_VERSION}.zip; \
-    unzip fastqc_${FASTQC_VERSION}.zip; \
-    rm fastqc_${FASTQC_VERSION}.zip; \
-    chmod 755 FastQC/fastqc; \
-    sed -i 's/250/5000/g' /opt/FastQC/fastqc
-
-ARG NGSPERL_VERSION="20231105"
-RUN cd /opt/ngsperl; \
-    git pull
 
 ARG STAR_FUSION_VERSION="v1.10.0"
 RUN cd /opt; \
@@ -91,5 +63,29 @@ RUN cd /opt; \
     rm v0.15.3.tar.gz;
 ENV PATH=/opt/FastQ-Screen-0.15.3:$PATH
 
-RUN pip install umi_tools
+RUN pip3 install --no-cache-dir --upgrade pybktree
 
+#20240614
+
+# RUN R -e "BiocManager::install('KEGG.db');library('KEGG.db')"
+# RUN R -e "BiocManager::install('slzhao/KEGGprofile');library('KEGGprofile')"
+RUN R -e "BiocManager::install(ask=FALSE)"
+RUN R -e "BiocManager::install('areyesq89/DEXSeq');library('DEXSeq')"
+
+RUN echo '#!/usr/bin/python3' > /usr/bin/dexseq_count.py; \
+    cat /usr/local/lib/R/site-library/DEXSeq/python_scripts/dexseq_count.py >> /usr/bin/dexseq_count.py; \
+    chmod 755 /usr/bin/dexseq_count.py; \
+    echo '#!/usr/bin/python3' > /usr/bin/dexseq_prepare_annotation.py; \
+    cat /usr/local/lib/R/site-library/DEXSeq/python_scripts/dexseq_prepare_annotation.py >> /usr/bin/dexseq_prepare_annotation.py; \
+    chmod 755 /usr/bin/dexseq_prepare_annotation.py
+
+RUN pip install --upgrade pip
+RUN pip install HTSeq
+
+# RUN cd /opt; \
+#     git clone https://github.com/CGATOxford/UMI-tools.git; \
+#     cd UMI-tools; \
+#     python3 setup.py install; \
+#     cd ..; \
+#     rm -rf UMI-tools; \ 
+#     umi-tools --version 

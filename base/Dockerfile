@@ -1,4 +1,4 @@
-FROM shengqh/debian10.2.1_r4.3.0_python3.10.11_java11.0.18_mono6.12.0.182:20230514
+FROM shengqh/debian12bookworm_r4.4.1_python3.12.4_java17.0.11_mono6.12.0.200:20240614
 
 RUN pip3 install wheel
 
@@ -48,8 +48,13 @@ RUN R -e "BiocManager::install('ggplot2'); library('ggplot2')"  && \
  R -e "BiocManager::install('tictoc', ask=FALSE);library('tictoc')" && \
  R -e "BiocManager::install('testit');library('testit')" && \
  R -e "BiocManager::install('clustree');library('clustree')" && \
- R -e "BiocManager::install('mclust');library('mclust')" && \
- R -e "BiocManager::install('bzhanglab/WebGestaltR', ask=FALSE);library('WebGestaltR')" && \
+ R -e "BiocManager::install('mclust');library('mclust')" 
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN rustc --version
+
+RUN R -e "BiocManager::install('bzhanglab/WebGestaltR', ask=FALSE);library('WebGestaltR')" && \
  R -e "BiocManager::install('qqconf', ask=FALSE);library('qqconf')" && \
  R -e "BiocManager::install('cvarrichio/Matrix.utils', force=TRUE, ask=FALSE);library('Matrix.utils')"
 
@@ -62,7 +67,7 @@ RUN pip3 install --no-cache-dir --upgrade \
 
 RUN apt-get install -y tabix
 
-ARG SAMTOOLS_VERSION="1.18"
+ARG SAMTOOLS_VERSION="1.20"
 RUN cd /opt; \
     wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
     tar -jxvf samtools-${SAMTOOLS_VERSION}.tar.bz2 ; \
@@ -74,7 +79,7 @@ RUN cd /opt; \
     rm -rf samtools-${SAMTOOLS_VERSION}; \
     samtools --version
 
-ARG BCFTOOLS_VERSION="1.18"
+ARG BCFTOOLS_VERSION="1.20"
 RUN cd /opt; \
     wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
     tar -jxvf bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
@@ -126,19 +131,19 @@ RUN cd /opt; \
     tar -xzvf edirect.tar.gz; \
     rm edirect.tar.gz
 
-ARG sratoolkit_VERSION="3.0.7"
+ARG sratoolkit_VERSION="3.1.1"
 RUN cd /opt; \
     wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/${sratoolkit_VERSION}/sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
     tar -xzvf sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; \
     rm sratoolkit.${sratoolkit_VERSION}-ubuntu64.tar.gz; 
 
-ARG PANDOC_VERSION="3.1.8"
+ARG PANDOC_VERSION="3.2"
 RUN cd /opt; \
     wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
     tar -xzvf pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz; \
     rm pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz
 
-ARG GSEA_VERSION="4.3.2"
+ARG GSEA_VERSION="4.3.3"
 RUN cd /opt; \
     wget https://data.broadinstitute.org/gsea-msigdb/gsea/software/desktop/4.3/GSEA_Linux_${GSEA_VERSION}.zip ; \
     unzip GSEA_Linux_${GSEA_VERSION}.zip ; \
@@ -147,19 +152,18 @@ RUN cd /opt; \
 ENV PATH=/opt/GSEA_Linux_${GSEA_VERSION}:/opt/cqstools.${CQSTOOLS_VERSION}:/opt/FastQC:/opt/edirect:/opt/pandoc-${PANDOC_VERSION}/bin:/opt/sratoolkit.${sratoolkit_VERSION}-ubuntu64/bin:$PATH
 RUN fastqc --version && cqstools -h && pandoc --version && esearch -h                                                                                                                                                                                                                                                          
 
-RUN pip3 install --no-cache-dir --upgrade cutadapt==4.5
-
-RUN R -e "BiocManager::install(ask=FALSE)"
+RUN pip3 install --no-cache-dir --upgrade cutadapt==4.8
 
 RUN R -e "BiocManager::install('kevinblighe/EnhancedVolcano', ask=FALSE);library('EnhancedVolcano')"
 RUN R -e "BiocManager::install('rmdformats', ask=FALSE);library('rmdformats')"
 RUN R -e "BiocManager::install('formatR', ask=FALSE);library('formatR')"
 RUN R -e "BiocManager::install('rjson', ask=FALSE);library('rjson')"
 
-ARG NGSPERL_VERSION="20231016"
+ARG NGSPERL_VERSION="20240616"
 RUN cd /opt; \
     git clone https://github.com/shengqh/ngsperl.git; \
     bash /opt/ngsperl/install_packages_nosudo.sh
 ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
 
 RUN R -e "install.packages('tidyverse');library('tidyverse')"
+RUN R -e "BiocManager::install(ask=FALSE)"
