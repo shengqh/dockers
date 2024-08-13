@@ -72,10 +72,10 @@ RUN pip3 install --no-cache-dir --upgrade pybktree
 RUN R -e "BiocManager::install(ask=FALSE)"
 RUN R -e "BiocManager::install('areyesq89/DEXSeq');library('DEXSeq')"
 
-RUN echo '#!/usr/bin/python3' > /usr/bin/dexseq_count.py; \
+RUN echo '#!/usr/local/bin/python3' > /usr/bin/dexseq_count.py; \
     cat /usr/local/lib/R/site-library/DEXSeq/python_scripts/dexseq_count.py >> /usr/bin/dexseq_count.py; \
     chmod 755 /usr/bin/dexseq_count.py; \
-    echo '#!/usr/bin/python3' > /usr/bin/dexseq_prepare_annotation.py; \
+    echo '#!/usr/local/bin/python3' > /usr/bin/dexseq_prepare_annotation.py; \
     cat /usr/local/lib/R/site-library/DEXSeq/python_scripts/dexseq_prepare_annotation.py >> /usr/bin/dexseq_prepare_annotation.py; \
     chmod 755 /usr/bin/dexseq_prepare_annotation.py
 
