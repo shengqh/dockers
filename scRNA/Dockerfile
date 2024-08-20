@@ -72,3 +72,8 @@ RUN R -e 'BiocManager::install("flextable");library("flextable")'
 
 RUN R -e 'BiocManager::install("BSgenome.Hsapiens.UCSC.hg38");library("BSgenome.Hsapiens.UCSC.hg38")'
 RUN R -e 'BiocManager::install("satijalab/azimuth");library("Azimuth")'
+
+RUN R -e 'BiocManager::install("holab-hku/DCATS");library("DCATS")'
+RUN R -e 'BiocManager::install()'
+
+
