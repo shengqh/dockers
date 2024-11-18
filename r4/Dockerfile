@@ -1,13 +1,10 @@
-FROM r-base:4.2.2
-
-RUN mkdir /scratch
-RUN mkdir /data
+FROM r-base:4.4.2
 
 RUN apt-get update -qq
-RUN apt-get install -y libcurl4-openssl-dev 
-RUN apt-get install -y libcurl4-gnutls-dev
-RUN apt-get install -y libssl-dev
-RUN apt-get install -y libhdf5-dev
-RUN apt-get install -y librtmp-dev 
-RUN apt-get install -y libfontconfig1-dev 
-RUN apt-get install -y libxml2-dev
+RUN apt-get install -y libcurl4-openssl-dev libssl-dev libhdf5-dev librtmp-dev libfontconfig1-dev libxml2-dev
+
+RUN R -e "Sys.setenv('R_REMOTES_NO_ERRORS_FROM_WARNINGS' = 'true')"
+RUN R -e "if('BiocManager' %in% rownames(installed.packages()) == FALSE) {install.packages('BiocManager', update=FALSE, ask=FALSE, dependencies=TRUE)}"
+
+RUN R -e "if('biomaRt' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('biomaRt', update=FALSE, ask=FALSE, dependencies=TRUE)}"
+RUN R -e "if('stringr' %in% rownames(installed.packages()) == FALSE) {BiocManager::install('stringr', update=FALSE, ask=FALSE, dependencies=TRUE)}"
