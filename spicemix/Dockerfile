@@ -6,3 +6,5 @@ RUN conda env create -f /src/SpiceMix.yml
 ENV PATH=/opt/conda/envs/SpiceMix/bin:$PATH
 RUN /bin/bash -c "source activate SpiceMix"
 
+RUN conda install -y nvidia::cuda-toolkit
+
