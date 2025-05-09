@@ -6,3 +6,7 @@ RUN R -e "BiocManager::install('qqman');library('qqman')"
 
 #for reading gzipped file in data.table
 RUN R -e "BiocManager::install('R.utils');library('R.utils')" 
+
+#20250415
+RUN R -e "BiocManager::install('kaustubhad/fastman');library('fastman')" 
+RUN R -e "BiocManager::install(ask = FALSE)" 
