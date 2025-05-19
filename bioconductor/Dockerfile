@@ -33,12 +33,19 @@ RUN Rscript --slave --no-save --no-restore-history -e 'BiocManager::install(ask=
 
 RUN Rscript --slave --no-save --no-restore-history -e 'install.packages("languageserver");library("languageserver")'
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
-  echo 'source $HOME/.cargo/env' >> $HOME/.bashrc
+RUN mkdir -p /opt/cargo && \
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | CARGO_HOME=/opt/cargo RUSTUP_HOME=/opt/rustup sh -s -- -y && \
+  echo 'export CARGO_HOME=/opt/cargo' >> $HOME/.bashrc && \
+  echo 'export RUSTUP_HOME=/opt/rustup' >> $HOME/.bashrc && \
+  echo 'export PATH=/opt/cargo/bin:$PATH' >> $HOME/.bashrc
 
-ENV PATH=/root/.cargo/bin:$PATH
+ENV PATH=/opt/cargo/bin:$PATH
+ENV CARGO_HOME=/opt/cargo
+ENV RUSTUP_HOME=/opt/rustup
 
 RUN rustup default stable
 
 RUN rustc --version
 RUN cargo --version
+
+#RUN apt-get update && apt-get install libmagick++-dev
