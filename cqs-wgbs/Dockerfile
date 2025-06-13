@@ -1,5 +1,5 @@
 # Build htslib from source
-FROM r-base:4.3.2
+FROM r-base:4.4.2
 
 RUN apt-get update && apt-get install -y libgd-dev libzstd-dev
 
@@ -48,6 +48,10 @@ RUN R -e "BiocManager::install('knitr'); library('knitr')"
 RUN R -e "BiocManager::install('RCurl'); library('RCurl')"
 
 RUN apt-get install -y libxml2-dev
+
+RUN apt-get install -y libharfbuzz-dev libfribidi-dev
+RUN R -e "BiocManager::install('textshaping'); library('textshaping')"
+
 RUN R -e "BiocManager::install('kableExtra'); library('kableExtra')"
 RUN R -e "BiocManager::install('digest'); library('digest')"
 RUN R -e "BiocManager::install('ggExtra'); library('ggExtra')"
@@ -56,9 +60,6 @@ RUN R -e "BiocManager::install('patchwork'); library('patchwork')"
 RUN R -e "BiocManager::install('dplyr'); library('dplyr')"
 
 RUN R -e "BiocManager::install('GenomicRanges'); library('GenomicRanges')"
-
-RUN apt-get install -y libharfbuzz-dev libfribidi-dev
-RUN R -e "BiocManager::install('textshaping'); library('textshaping')"
 
 RUN R -e "BiocManager::install('tidyverse'); library('tidyverse')"
 RUN R -e "BiocManager::install('methylKit'); library('methylKit')"
@@ -70,3 +71,4 @@ RUN R -e "BiocManager::install('minfi'); library('minfi')"
 RUN apt-get install -y pandoc
 
 RUN R -e "BiocManager::install('rmdformats'); library('rmdformats')"
+RUN R -e "BiocManager::install('ComplexHeatmap'); library('ComplexHeatmap')"
