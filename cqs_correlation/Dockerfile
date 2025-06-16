@@ -24,4 +24,5 @@ RUN R -e "BiocManager::install('tibble', update=TRUE, ask=FALSE, dependencies=TR
 RUN R -e "BiocManager::install('tools', update=TRUE, ask=FALSE, dependencies=TRUE)"
 RUN R -e "BiocManager::install('VennDiagram', update=TRUE, ask=FALSE, dependencies=TRUE)"
 RUN R -e "BiocManager::install('rmdformats', update=TRUE, ask=FALSE, dependencies=TRUE)"
+RUN R -e "BiocManager::install('sva', update=TRUE, ask=FALSE, dependencies=TRUE);library(sva)"
 
