@@ -13,3 +13,5 @@ RUN cd opt; \
     chmod +x plink2; \
     mv plink2 /usr/local/bin/plink2; \
     plink2 --version
+
+RUN pip3 install pgenlib
