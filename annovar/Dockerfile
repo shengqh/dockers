@@ -12,19 +12,19 @@ RUN apt-get clean all \
 		libncurses5-dev \
 	&& apt-get clean
 
-ENV annovar_ver=UNTIL_20241117
-RUN mkdir /opt/annovar
-ADD annovar /opt/annovar
-ENV PATH=/opt/annovar:$PATH
+RUN mkdir /opt/annovar_20250302
+ADD annovar_20250302 /opt/annovar_20250302
+ENV PATH=/opt/annovar_20250302:$PATH
 
-RUN cd /opt/annovar; \
+RUN cd /opt/annovar_20250302; \
   mkdir humandb; \
   annotate_variation.pl -downdb -buildver hg38 -webfrom annovar refGene humandb/
   
-  # annotate_variation.pl -downdb -buildver hg38 -webfrom annovar avsnp151 humandb/; \
-  # annotate_variation.pl -downdb -buildver hg38 -webfrom annovar cytoBand humandb/; \
-  # annotate_variation.pl -downdb -buildver hg38 -webfrom annovar exac03 humandb/; \
-  # annotate_variation.pl -downdb -buildver hg38 -webfrom annovar 1000g2015aug humandb/; \
-  # annotate_variation.pl -downdb -buildver hg38 -webfrom annovar gnomad41_genome humandb/; \
-  # annotate_variation.pl -downdb -buildver hg38 -webfrom annovar clinvar_20240917 humandb/; \
-  # annotate_variation.pl -downdb -buildver hg38 -webfrom annovar cosmic70 humandb/; 
+# annotate_variation.pl -downdb -buildver hg38 -webfrom annovar avsnp151 humandb/; \
+# annotate_variation.pl -downdb -buildver hg38 -webfrom annovar cytoBand humandb/; \
+# annotate_variation.pl -downdb -buildver hg38 -webfrom annovar exac03 humandb/; \
+# annotate_variation.pl -downdb -buildver hg38 -webfrom annovar 1000g2015aug humandb/; \
+# annotate_variation.pl -downdb -buildver hg38 -webfrom annovar gnomad41_genome humandb/; \
+# annotate_variation.pl -downdb -buildver hg38 -webfrom annovar clinvar_20250721 humandb/; \
+# annotate_variation.pl -downdb -buildver hg38 -webfrom annovar cosmic70 humandb/; 
+# annotate_variation.pl -downdb -buildver hg38 -webfrom annovar dbnsfp41a humandb/; \
