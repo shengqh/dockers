@@ -77,3 +77,9 @@ RUN R -e 'Sys.setenv(LIBARROW_MINIMAL="false");install.packages("arrow");library
 
 RUN R -e 'BiocManager::install("MarioniLab/miloR");library("miloR")'
 RUN R -e 'BiocManager::install("MarioniLab/miloDE");library("miloDE")'
+
+ARG DATETIME=20250818
+RUN R -e 'BiocManager::install(ask=FALSE)'
+RUN R -e 'BiocManager::install("hdf5r");library("hdf5r")'
+RUN R -e 'BiocManager::install("dmcable/spacexr");library("spacexr")'
+RUN R -e 'BiocManager::install(ask=FALSE)'
