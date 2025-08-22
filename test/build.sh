@@ -1,1 +1,1 @@
-docker build -t shengqh/bioinfo:test .
+docker buildx build -t shengqh/bioinfo:test .

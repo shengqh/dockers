@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo:perl5.22.1
+FROM shengqh/bioinfo:base
 
 RUN apt-get install -y pkg-config
 RUN apt-get install -y libgd-dev
