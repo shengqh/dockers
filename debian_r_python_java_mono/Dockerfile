@@ -1,12 +1,14 @@
-FROM python:3.12.4
+FROM python:3.13.7-bookworm
 
 RUN apt update && apt install -y apt-utils && apt upgrade -y
-RUN pip install --upgrade pip
 
 ENV SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
-RUN pip3 install pandas scipy numpy seaborn scikit-learn umap-learn
 
-RUN apt-get install -y \
+RUN pip install --no-cache-dir --upgrade \
+  pandas scipy numpy seaborn scikit-learn
+
+RUN apt-get update && \
+  apt-get install -y software-properties-common \
   libmagick++-dev \
   libhdf5-dev \
   libcurl4-gnutls-dev \
@@ -25,9 +27,7 @@ RUN apt-get install -y \
   libjpeg-dev \ 
   libsqlite3-dev \
   libproj-dev \
-  libcairo2-dev 
-
-RUN apt-get install -y \
+  libcairo2-dev \
   imagemagick \
   wget \
   automake \
@@ -40,30 +40,33 @@ RUN apt-get install -y \
   default-jdk \
   libv8-dev \
   libgsl-dev \
-  software-properties-common \
-  libpoppler-cpp-dev
+  libpoppler-cpp-dev \
+  libgdiplus
 
 RUN gpg --keyserver keyserver.ubuntu.com --recv-key '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
 RUN gpg --armor --export '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7' | tee /etc/apt/trusted.gpg.d/cran_debian_key.asc
 RUN echo "deb http://cloud.r-project.org/bin/linux/debian bookworm-cran40/" | tee /etc/apt/sources.list.d/r.list
-RUN apt update; apt install -y r-base; R --version
+RUN apt-get update; apt-get install -y r-base; R --version
 
 RUN rm -rf /usr/local/lib/R/site-library; ln -s /usr/lib/R/site-library /usr/local/lib/R/site-library
 
-ENV NGSPERL_VERSION="20240614"
+RUN apt-get install -y ca-certificates gnupg && \
+    gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+    echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+    apt-get update && \
+    apt-get install -y mono-devel && \
+    mono --version
+
+RUN R -e "install.packages('BiocManager', force=TRUE, ask=FALSE);library('BiocManager')" && \
+  R -e "BiocManager::install('jsonlite', force=TRUE, ask=FALSE);library('jsonlite')" && \
+  R -e "BiocManager::install('languageserver', force=TRUE, ask=FALSE);library('languageserver')" && \
+  R -e "BiocManager::install(ask=FALSE)"
+
+ENV NGSPERL_VERSION="20250903"
 RUN cd /opt; \
     git clone https://github.com/shengqh/ngsperl.git; \
     bash /opt/ngsperl/install_packages_nosudo.sh
-ENV PERL5LIB=/opt/ngsperl/lib:$PERL5LIB
+ENV PERL5LIB=/opt/ngsperl/lib
 
-RUN apt-get install -y libgdiplus
-
-RUN apt install ca-certificates gnupg && \
-    gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-    echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
-    apt update && \
-    apt install -y mono-devel && \
-    mono --version
-
-RUN R -e "install.packages('BiocManager', force=TRUE, ask=FALSE);library('BiocManager')"
-RUN R -e "BiocManager::install('jsonlite', force=TRUE, ask=FALSE);library('jsonlite')"
+#umap-learn will cause conflict, remove it from root image
+#RUN pip install --no-cache-dir --upgrade umap-learn
