@@ -1,4 +1,4 @@
-FROM broadinstitute/gatk:4.5.0.0
+FROM broadinstitute/gatk:4.6.2.0
 
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 
@@ -19,7 +19,7 @@ RUN apt-get install -y wget git pandoc
 RUN apt-get install -y liblzma-dev 
 RUN apt-get install -y libz-dev
 
-ENV BCFTOOLS_VERSION="1.19"
+ENV BCFTOOLS_VERSION="1.22"
 RUN cd /opt; \
     wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
     tar -jxvf bcftools-${BCFTOOLS_VERSION}.tar.bz2 ; \
