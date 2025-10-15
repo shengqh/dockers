@@ -70,3 +70,9 @@ RUN cd /opt; \
 ENV PATH=/opt/strelka-2.9.10.centos6_x86_64/bin/:$PATH
 
 COPY irtools.centos /usr/bin/irtools
+
+# set locale, without this, R code may not handle unicode character correctly
+RUN apt-get update && \
+  apt-get install -y locales && \
+  locale-gen en_US.UTF-8 && \
+  update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
