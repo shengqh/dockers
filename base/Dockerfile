@@ -1,4 +1,4 @@
-FROM shengqh/debian12bookworm_r4.5.1_python3.13.7_java17.0.16_mono6.12.0.200:20250905
+FROM shengqh/debian12bookworm_r4.5.1_python3.13.9_java17.0.16_mono6.12.0.200:20251016
 
 RUN apt-get update && \
   apt-get install -y libgd-dev libzstd-dev tabix
@@ -140,13 +140,26 @@ RUN R -e "install.packages('remotes'); library('remotes')" && \
     R -e "BiocManager::install('formatR', ask=FALSE);library('formatR')" && \
     R -e "BiocManager::install('rjson', ask=FALSE);library('rjson')"
 
+
+RUN pip install --no-cache-dir --upgrade \
+  setuptools
+
+#numba don't support python 3.14 yet
+RUN git clone https://github.com/numba/numba.git && \
+    cd numba && \
+    python setup.py install && \
+    cd .. && rm -rf numba
+
 RUN pip install --no-cache-dir --upgrade \
   wheel \
-  pysam \
+  pyarrow \
   biopython \
   pytabix \
   cutadapt \
   multiqc
+
+RUN pip install --no-cache-dir --upgrade \
+  pysam
 
 ARG NGSPERL_VERSION="20250905"
 RUN cd /opt/ngsperl/ && git pull

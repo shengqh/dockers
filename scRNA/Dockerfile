@@ -1,4 +1,4 @@
-FROM shengqh/bioinfo_base:20250905
+FROM shengqh/bioinfo_base:20251016
 
 RUN pip install --no-cache-dir --upgrade \
   scvi-colab sccoda GMM-demux pysam cna scrublet
@@ -10,8 +10,8 @@ ENV LIBARROW_BINARY=true
 RUN apt-get update && apt-get install -y libthrift-dev
 RUN R -e 'install.packages("arrow", type = "source", repos = "https://packagemanager.rstudio.com/all/__linux__/focal/latest")'
 
-RUN R -e "BiocManager::install('SeuratObject', ask=FALSE);library('SeuratObject')" && \
-    R -e "BiocManager::install('sctransform', force=TRUE, ask=FALSE);library('sctransform')" && \
+RUN R -e "BiocManager::install('sctransform', force=TRUE, ask=FALSE);library('sctransform')" && \
+    R -e "BiocManager::install('satijalab/seurat-object', ask=FALSE);library('SeuratObject')" && \
     R -e 'BiocManager::install("satijalab/seurat");library("Seurat")' && \
     R -e 'BiocManager::install("satijalab/seurat-data");library("SeuratData")' && \
     R -e 'BiocManager::install("satijalab/azimuth");library("Azimuth")' && \
@@ -71,8 +71,9 @@ ENV PATH=/opt/strelka-2.9.10.centos6_x86_64/bin/:$PATH
 
 COPY irtools.centos /usr/bin/irtools
 
-# set locale, without this, R code may not handle unicode character correctly
 RUN apt-get update && \
-  apt-get install -y locales && \
-  locale-gen en_US.UTF-8 && \
-  update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+        apt-get install -y libudunits2-dev libgdal-dev && \
+        rm -rf /var/lib/apt/lists/*
+RUN R -e "BiocManager::install('sf', force=TRUE, ask=FALSE);library('sf')"
+
+RUN R -e "BiocManager::install('liuqivandy/MEcell', ask=FALSE);library('MEcell')"

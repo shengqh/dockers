@@ -1,3 +1,7 @@
+cd /home/shengq2/program/dockers/debian_r_python_java_mono
+sh build.sh
+sh push.sh
+
 # cd /home/shengq2/program/dockers/annotateGenome
 # sh build.sh
 # docker push shengqh/bioinfo:annotateGenome
