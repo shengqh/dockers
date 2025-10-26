@@ -77,3 +77,5 @@ RUN apt-get update && \
 RUN R -e "BiocManager::install('sf', force=TRUE, ask=FALSE);library('sf')"
 
 RUN R -e "BiocManager::install('liuqivandy/MEcell', ask=FALSE);library('MEcell')"
+
+RUN R -e "BiocManager::install('logger', ask=FALSE);library('logger')"
