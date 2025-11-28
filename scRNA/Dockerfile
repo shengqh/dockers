@@ -79,3 +79,19 @@ RUN R -e "BiocManager::install('sf', force=TRUE, ask=FALSE);library('sf')"
 RUN R -e "BiocManager::install('liuqivandy/MEcell', ask=FALSE);library('MEcell')"
 
 RUN R -e "BiocManager::install('logger', ask=FALSE);library('logger')"
+
+RUN R -e "BiocManager::install('liuqivandy/SpaGene', ask=FALSE);library('SpaGene')"
+
+RUN R -e "BiocManager::install('MangiolaLaboratory/sccomp', ask=FALSE);library('sccomp')"
+
+# install cmdstanr package and install cmdstan into /usr/local/cmdstan
+RUN R -e "install.packages('cmdstanr', repos = c('https://stan-dev.r-universe.dev/', getOption('repos')))"
+RUN R -e "cmdstanr::check_cmdstan_toolchain(fix = TRUE)"
+
+RUN mkdir -p /usr/local/cmdstan && \
+  R -e "cmdstanr::install_cmdstan(dir = '/usr/local/cmdstan', cores = 8)"
+ENV CMDSTAN=/usr/local/cmdstan
+ENV PATH=$CMDSTAN/bin:$PATH
+
+# small verification step (optional) — will print path & version during build
+RUN R -e "library(cmdstanr); cat('cmdstan path:', cmdstan_path(), '\\n'); cat('cmdstan version:', cmdstan_version(), '\\n')"
