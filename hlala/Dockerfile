@@ -26,7 +26,7 @@ RUN apt-get update -y && apt-get install -y \
     libcurl4-openssl-dev \
     wget \
     libz-dev \
-    openjdk-8-jre \
+    openjdk-21-jdk \
     libboost-all-dev \
     cmake \
     libjsoncpp-dev
@@ -46,7 +46,7 @@ RUN cd /opt && \
 
 # install picard
 WORKDIR /usr/local/bin
-RUN wget https://github.com/broadinstitute/picard/releases/download/${picard_version}/picard.jar
+RUN wget https://github.com/broadinstitute/picard/releases/download/${picard_version}/picard.jar 
 
 # install bwa
 RUN cd /opt && \
@@ -90,9 +90,7 @@ RUN sed -i 's@\$(BAMTOOLS_PATH)/lib64@\$(BAMTOOLS_PATH)/lib@' makefile
 RUN make all BOOST_PATH=/usr/include/boost BAMTOOLS_PATH=/usr/local
 
 # modify paths.ini for hla*la
-RUN sed -i 's@samtools_bin=@samtools_bin=/usr/local/bin/samtools@' paths.ini && \
-  sed -i 's@bwa_bin=@bwa_bin=/usr/local/bin/bwa@' paths.ini && \
-  sed -i 's@picard_sam2fastq_bin=.*@picard_sam2fastq_bin=/usr/local/bin/picard.jar@' paths.ini && \
+RUN echo "picard_sam2fastq_bin=/usr/local/bin/picard.jar" > paths.ini && \
   cat paths.ini
 
 # some final cleanup and command
