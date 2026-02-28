@@ -95,3 +95,8 @@ ENV PATH=$CMDSTAN/bin:$PATH
 
 # small verification step (optional) — will print path & version during build
 RUN R -e "library(cmdstanr); cat('cmdstan path:', cmdstan_path(), '\\n'); cat('cmdstan version:', cmdstan_version(), '\\n')"
+
+RUN R -e "BiocManager::install('homologene', ask=FALSE);library('homologene')"
+RUN R -e "BiocManager::install('AnnotationDbi', ask=FALSE);library('AnnotationDbi')"
+RUN R -e "BiocManager::install('org.Mm.eg.db', ask=FALSE);library('org.Mm.eg.db')"
+RUN R -e "BiocManager::install('org.Hs.eg.db', ask=FALSE);library('org.Hs.eg.db')"
