@@ -89,9 +89,10 @@ RUN R -e "install.packages('cmdstanr', repos = c('https://stan-dev.r-universe.de
 RUN R -e "cmdstanr::check_cmdstan_toolchain(fix = TRUE)"
 
 RUN mkdir -p /usr/local/cmdstan && \
-  R -e "cmdstanr::install_cmdstan(dir = '/usr/local/cmdstan', cores = 8)"
-ENV CMDSTAN=/usr/local/cmdstan
+  R -e "cmdstanr::install_cmdstan(dir = '/usr/local', cores = 8)"
+ENV CMDSTAN=/usr/local/cmdstan-2.38.0/ # adjust this if the version changes
 ENV PATH=$CMDSTAN/bin:$PATH
+RUN stanc --version
 
 # small verification step (optional) — will print path & version during build
 RUN R -e "library(cmdstanr); cat('cmdstan path:', cmdstan_path(), '\\n'); cat('cmdstan version:', cmdstan_version(), '\\n')"
