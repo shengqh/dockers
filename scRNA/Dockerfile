@@ -100,3 +100,11 @@ RUN R -e "BiocManager::install('homologene', ask=FALSE);library('homologene')"
 RUN R -e "BiocManager::install('AnnotationDbi', ask=FALSE);library('AnnotationDbi')"
 RUN R -e "BiocManager::install('org.Mm.eg.db', ask=FALSE);library('org.Mm.eg.db')"
 RUN R -e "BiocManager::install('org.Hs.eg.db', ask=FALSE);library('org.Hs.eg.db')"
+
+# Run sccomp estimation to trigger cmdstan installation and compilation of the model, which is time consuming. 
+# This way the image will be ready to use after building.
+RUN mkdir -p /usr/lib/R/site-library/sccomp/models
+RUN R -e "library(dplyr);library(sccomp);library(ggplot2);library(forcats);library(tidyr); \
+data('seurat_obj'); sccomp_result=seurat_obj |> sccomp_estimate( formula_composition = ~ type, sample = 'sample', cell_group = 'cell_group', cache_stan_model = '/usr/lib/R/site-library/sccomp/models', cores = 8, verbose = FALSE ) |> sccomp_test(); \
+data('counts_obj'); sccomp_result=counts_obj |> sccomp_estimate( formula_composition = ~ type, sample = 'sample', cell_group = 'cell_group', abundance = 'count', cache_stan_model = '/usr/lib/R/site-library/sccomp/models', cores = 8, verbose = FALSE ) |> sccomp_test(); \
+"
