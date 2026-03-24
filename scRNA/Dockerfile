@@ -82,30 +82,43 @@ RUN R -e "BiocManager::install('logger', ask=FALSE);library('logger')"
 
 RUN R -e "BiocManager::install('liuqivandy/SpaGene', ask=FALSE);library('SpaGene')"
 
-RUN R -e "BiocManager::install('MangiolaLaboratory/sccomp', ask=FALSE);library('sccomp')"
-
-# install cmdstanr package and install cmdstan into /usr/local/cmdstan
-RUN R -e "install.packages('cmdstanr', repos = c('https://stan-dev.r-universe.dev/', getOption('repos')))"
-RUN R -e "cmdstanr::check_cmdstan_toolchain(fix = TRUE)"
-
-RUN mkdir -p /usr/local/cmdstan && \
-  R -e "cmdstanr::install_cmdstan(dir = '/usr/local', cores = 8)"
-ENV CMDSTAN=/usr/local/cmdstan-2.38.0/ # adjust this if the version changes
-ENV PATH=$CMDSTAN/bin:$PATH
-RUN stanc --version
-
-# small verification step (optional) — will print path & version during build
-RUN R -e "library(cmdstanr); cat('cmdstan path:', cmdstan_path(), '\\n'); cat('cmdstan version:', cmdstan_version(), '\\n')"
-
 RUN R -e "BiocManager::install('homologene', ask=FALSE);library('homologene')"
 RUN R -e "BiocManager::install('AnnotationDbi', ask=FALSE);library('AnnotationDbi')"
 RUN R -e "BiocManager::install('org.Mm.eg.db', ask=FALSE);library('org.Mm.eg.db')"
 RUN R -e "BiocManager::install('org.Hs.eg.db', ask=FALSE);library('org.Hs.eg.db')"
 
-# Run sccomp estimation to trigger cmdstan installation and compilation of the model, which is time consuming. 
-# This way the image will be ready to use after building.
-RUN mkdir -p /usr/lib/R/site-library/sccomp/models
-RUN R -e "library(dplyr);library(sccomp);library(ggplot2);library(forcats);library(tidyr); \
-data('seurat_obj'); sccomp_result=seurat_obj |> sccomp_estimate( formula_composition = ~ type, sample = 'sample', cell_group = 'cell_group', cache_stan_model = '/usr/lib/R/site-library/sccomp/models', cores = 8, verbose = FALSE ) |> sccomp_test(); \
-data('counts_obj'); sccomp_result=counts_obj |> sccomp_estimate( formula_composition = ~ type, sample = 'sample', cell_group = 'cell_group', abundance = 'count', cache_stan_model = '/usr/lib/R/site-library/sccomp/models', cores = 8, verbose = FALSE ) |> sccomp_test(); \
-"
+# Install sccomp is useless in docker since it requires to write models into disk, which is not possible in docker. 
+# So we skip it here and install it in the host environment instead.
+#RUN R -e "BiocManager::install('MangiolaLaboratory/sccomp', ask=FALSE);library('sccomp')"
+
+# install cmdstanr package and install cmdstan into /usr/local/cmdstan
+RUN R -e "install.packages('cmdstanr', repos = c('https://stan-dev.r-universe.dev/', getOption('repos')))"
+RUN R -e "cmdstanr::check_cmdstan_toolchain(fix = TRUE)"
+RUN R -e "cmdstanr::install_cmdstan(dir = '/usr/local', cores = 8)"
+
+# adjust this if the version changes
+ENV CMDSTAN=/usr/local/cmdstan-2.38.0/
+ENV PATH=$CMDSTAN/bin:$PATH
+RUN stanc --version
+
+RUN mkdir -p /opt/sccomp_models
+RUN R -e "BiocManager::install('MangiolaLaboratory/sccomp', ask=FALSE);library('sccomp')"
+RUN R -e "library('sccomp'); \
+          model1 = sccomp:::load_model('glm_multi_beta_binomial', cache_dir='/opt/sccomp_models', force = TRUE, threads = 8); \
+          model2 = sccomp:::load_model('glm_multi_beta_binomial_generate_data', cache_dir='/opt/sccomp_models', force = TRUE, threads = 8); \
+          model3 = sccomp:::load_model('glm_multi_beta_binomial_simulate_data', cache_dir='/opt/sccomp_models', force = TRUE, threads = 8)"
+RUN ls -l /opt/sccomp_models/2.1.27
+
+RUN R -e "devtools::install_github('JEFworks-Lab/MERINGUE')"
+RUN R -e "devtools::install_github('KlugerLab/ALRA')"
+RUN R -e "devtools::install_github('zdebruine/RcppML')"
+RUN R -e "devtools::install_github('jinworks/SpatialCellChat')"
+
+RUN R -e "Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE); install.packages('NMF')"
+RUN R -e "devtools::install_github('jokergoo/circlize')"
+RUN R -e "devtools::install_github('jokergoo/ComplexHeatmap')"
+
+#The original cellchat package has a bug in visualization, which is fixed in the forked version. So we install the forked version here.
+#RUN R -e "devtools::install_github('jinworks/CellChat')"
+RUN R -e "BiocManager::install('shengqh/CellChat', ask=FALSE);library('CellChat')"
+
