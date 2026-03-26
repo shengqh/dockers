@@ -20,6 +20,12 @@ RUN R -e "BiocManager::install('cowplot'); library('cowplot')"
 RUN R -e "BiocManager::install('data.table'); library('data.table')"
 RUN R -e "BiocManager::install('digest'); library('digest')"
 RUN R -e "BiocManager::install('dplyr'); library('dplyr')"
+
+RUN apt install -y libuv1-dev
+RUN R -e "BiocManager::install('fs'); library('fs')"
+RUN R -e "BiocManager::install('sass'); library('sass')"
+RUN R -e "BiocManager::install('bslib'); library('bslib')"
+RUN R -e "BiocManager::install('rmarkdown'); library('rmarkdown')"
 RUN R -e "BiocManager::install('DT'); library('DT')"
 RUN R -e "BiocManager::install('ggExtra'); library('ggExtra')"
 RUN R -e "BiocManager::install('ggplot2'); library('ggplot2')"
@@ -43,8 +49,6 @@ RUN R -e "BiocManager::install('ragg'); library('ragg')"
 RUN apt install -y cmake
 RUN R -e "BiocManager::install('tidyverse'); library('tidyverse')"
 
-RUN R -e "BiocManager::install('tools'); library('tools')"
-RUN R -e "BiocManager::install('XML'); library('XML')"
 RUN R -e "BiocManager::install('yihui/knitr'); library('knitr')"
 RUN R -e "BiocManager::install('ggpubr'); library('ggpubr')"
 
