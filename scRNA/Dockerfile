@@ -122,3 +122,7 @@ RUN R -e "devtools::install_github('jokergoo/ComplexHeatmap')"
 #RUN R -e "devtools::install_github('jinworks/CellChat')"
 RUN R -e "BiocManager::install('shengqh/CellChat', ask=FALSE);library('CellChat')"
 
+#20260325, install devel version to avoid error from Seurat slot instead of layer call, which is fixed in the devel version but not in the release version yet.
+RUN R -e "BiocManager::install('compbiomed/singleCellTK', ref = 'devel', ask=FALSE);library('singleCellTK')"
+RUN R -e "BiocManager::install('leidenbase', ask=FALSE);library('leidenbase')"
+
