@@ -126,3 +126,23 @@ RUN R -e "BiocManager::install('shengqh/CellChat', ask=FALSE);library('CellChat'
 RUN R -e "BiocManager::install('compbiomed/singleCellTK', ref = 'devel', ask=FALSE);library('singleCellTK')"
 RUN R -e "BiocManager::install('leidenbase', ask=FALSE);library('leidenbase')"
 
+#20260408, install multi-thread MEcell, which is much faster than the original version.
+RUN R -e "BiocManager::install(ask=FALSE)"
+RUN R -e "BiocManager::install('liuqivandy/MEcell', ask=FALSE);library('MEcell')"
+
+RUN cd /opt && \
+    git clone https://github.com/shengqh/silhouette.git && \
+    cd silhouette && \
+    sh build.sh && \
+    mv silhouette /usr/bin/silhouette && \
+    cd .. && \
+    rm -rf silhouette && \
+    chmod +x /usr/bin/silhouette 
+
+RUN pip install --no-cache-dir numpy scipy scikit-learn cupy-cuda12x==13.6.0
+COPY MEcell_python /opt/MEcell_python
+RUN cd /opt/MEcell_python && \
+    pip3 install . && \
+    cd .. && \
+    rm -rf MEcell_python
+    
