@@ -1,3 +1,4 @@
 date_string=`date +%Y%m%d`
-docker build -t shengqh/rstudio4:${date_string} .
-docker build -t shengqh/rstudio4:latest .
+docker buildx build --progress=plain -t shengqh/cqs_rstudio:${date_string} .
+docker image rm -f shengqh/cqs_rstudio:latest
+docker tag shengqh/cqs_rstudio:${date_string} shengqh/cqs_rstudio:latest
