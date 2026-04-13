@@ -146,3 +146,4 @@ RUN cd /opt/MEcell_python && \
     cd .. && \
     rm -rf MEcell_python
     
+RUN R -e "BiocManager::install('fgsea', ask=FALSE, force=TRUE);library('fgsea')"
