@@ -147,3 +147,8 @@ RUN cd /opt/MEcell_python && \
     rm -rf MEcell_python
     
 RUN R -e "BiocManager::install('fgsea', ask=FALSE, force=TRUE);library('fgsea')"
+
+#20260427, install the packages for extracting cell images
+RUN pip install --no-cache-dir pyproj geopandas numpy pandas tifffile rasterio shapely ipykernel imagecodecs
+#20260427, update all packages to the latest version, let's hope it will fix the problem of spatial visualization issue.
+RUN R -e "BiocManager::install(c('ggplot2', 'igraph', 'Seurat'), force=TRUE, ask=FALSE)"
