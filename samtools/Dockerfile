@@ -6,7 +6,7 @@ RUN apt-get install -y wget bzip2 build-essential zlib1g-dev
 RUN apt-get install -y libncurses-dev libbz2-dev liblzma-dev
 RUN apt-get install -y libcurl4-gnutls-dev libssl-dev
 
-ENV SAMTOOLS_VERSION="1.21"
+ENV SAMTOOLS_VERSION="1.23"
 
 RUN cd /opt; \
     wget https://github.com/samtools/htslib/releases/download/${SAMTOOLS_VERSION}/htslib-${SAMTOOLS_VERSION}.tar.bz2 ; \
@@ -41,6 +41,8 @@ RUN cd /opt; \
     rm -rf bcftools-${SAMTOOLS_VERSION}; \
     bcftools --version
 
-ENV agd_vcf_VERSION="1.0.1"
-RUN cd /usr/local/bin && wget https://raw.githubusercontent.com/shengqh/agd_vcf/refs/heads/main/agd_vcf && chmod +x agd_vcf
-
+ENV agd_vcf_VERSION="1.0.4"
+RUN cd /usr/local/bin && \
+    wget https://raw.githubusercontent.com/shengqh/agd_vcf/refs/heads/main/agd_vcf && \
+    chmod +x agd_vcf && \
+    agd_vcf --version
