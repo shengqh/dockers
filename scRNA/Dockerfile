@@ -151,4 +151,10 @@ RUN R -e "BiocManager::install('fgsea', ask=FALSE, force=TRUE);library('fgsea')"
 #20260427, install the packages for extracting cell images
 RUN pip install --no-cache-dir pyproj geopandas numpy pandas tifffile rasterio shapely ipykernel imagecodecs
 #20260427, update all packages to the latest version, let's hope it will fix the problem of spatial visualization issue.
-RUN R -e "BiocManager::install(c('ggplot2', 'igraph', 'Seurat'), force=TRUE, ask=FALSE)"
+RUN R -e "BiocManager::install(force=TRUE, ask=FALSE)"
+#20260515, install azimuth first, then roll back Signac to 1.1.6.0.
+#otherwise Azimuth will throw error: object 'RunChromVAR' is not exported by 'namespace:Signac'
+RUN R -e "BiocManager::install(c('satijalab/azimuth'), force=TRUE, ask=FALSE)"
+RUN R -e "remotes::install_github('stuart-lab/signac', ref='1.16.0', ask=FALSE, force=TRUE);library('Azimuth')"
+
+RUN R -e "BiocManager::install('zellkonverter');library('zellkonverter')"
