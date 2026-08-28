@@ -1,4 +1,4 @@
-FROM python:3.13.9-bookworm
+FROM python:3.13.15-bookworm
 
 # Alot of packages are not compatible with python 3.14 yet, so we use python 3.13 for now
 
@@ -76,9 +76,12 @@ RUN R -e "install.packages('BiocManager', force=TRUE, ask=FALSE);library('BiocMa
   R -e "BiocManager::install('languageserver', force=TRUE, ask=FALSE);library('languageserver')" && \
   R -e "BiocManager::install(ask=FALSE)"
 
-ENV NGSPERL_VERSION="202501014" \
+RUN R -e "install.packages('remotes'); library('remotes')" && \
+    R -e 'install.packages("devtools");library(devtools)'
+
+ENV NGSPERL_VERSION="20260829" \
   PERL5LIB=/opt/ngsperl/lib
 
 RUN cd /opt && \
   git clone https://github.com/shengqh/ngsperl.git && \
-  bash /opt/ngsperl/install_packages_nosudo.sh
+  bash /opt/ngsperl/install_packages_nosudo_default.sh
