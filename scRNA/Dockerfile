@@ -1,20 +1,49 @@
-FROM shengqh/bioinfo_base:20251016
-
-RUN pip install --no-cache-dir --upgrade \
-  scvi-colab sccoda GMM-demux pysam cna scrublet
-
-RUN R -e "install.packages('bbmle', ask=FALSE);library('bbmle')"
+FROM shengqh/bioinfo_base:20260828
 
 #https://github.com/apache/arrow/issues/47202
 ENV LIBARROW_BINARY=true
-RUN apt-get update && apt-get install -y libthrift-dev
+RUN apt-get update && \
+    apt-get install -y \
+      libthrift-dev \
+      libudunits2-dev \
+      libgdal-dev \
+      libssl-dev \
+      openssl && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY MEcell_python /opt/MEcell_python
+RUN pip install --no-cache-dir --upgrade \
+      scvi-colab \
+      sccoda \
+      GMM-demux \
+      pysam \
+      cna \
+      scrublet \
+      numpy \
+      scipy \
+      scikit-learn \
+      cupy-cuda12x==13.6.0 \
+      pyproj \
+      geopandas \
+      pandas \
+      tifffile \
+      rasterio \
+      shapely \
+      ipykernel \
+      imagecodecs
+RUN cd /opt/MEcell_python && \
+    pip3 install . && \
+    cd .. && \
+    rm -rf MEcell_python
+
+RUN R -e "install.packages('bbmle', ask=FALSE);library('bbmle')"
+
 RUN R -e 'install.packages("arrow", type = "source", repos = "https://packagemanager.rstudio.com/all/__linux__/focal/latest")'
 
 RUN R -e "BiocManager::install('sctransform', force=TRUE, ask=FALSE);library('sctransform')" && \
     R -e "BiocManager::install('satijalab/seurat-object', ask=FALSE);library('SeuratObject')" && \
     R -e 'BiocManager::install("satijalab/seurat");library("Seurat")' && \
     R -e 'BiocManager::install("satijalab/seurat-data");library("SeuratData")' && \
-    R -e 'BiocManager::install("satijalab/azimuth");library("Azimuth")' && \
     R -e 'BiocManager::install("satijalab/seurat-wrappers")' && \
     R -e "BiocManager::install('wjawaid/enrichR', ask=FALSE);library('enrichR')" && \
     R -e "BiocManager::install('campbio/celda', ask=FALSE);library('celda')" && \
@@ -32,7 +61,6 @@ RUN R -e "BiocManager::install('sctransform', force=TRUE, ask=FALSE);library('sc
     R -e "BiocManager::install('Nebulosa', ask=FALSE);library('Nebulosa')" && \
     R -e "BiocManager::install('igordot/msigdbr', ask=FALSE);library('msigdbr')" && \
     R -e "BiocManager::install('YuLab-SMU/ggtree', ask=FALSE);library('ggtree')" && \
-    R -e "BiocManager::install('singleCellTK', ask=FALSE);library('singleCellTK')" && \
     R -e "BiocManager::install('scCustomize', ask=FALSE);library('scCustomize')" && \
     R -e "BiocManager::install('liuqivandy/scRNABatchQC', ask=FALSE);library('scRNABatchQC')" && \
     R -e "BiocManager::install('JiaLiVUMC/scMRMA', ask=FALSE);library('scMRMA')" && \
@@ -42,7 +70,6 @@ RUN R -e "BiocManager::install('sctransform', force=TRUE, ask=FALSE);library('sc
     R -e "BiocManager::install('immunogenomics/presto', ask=FALSE);library('presto')" && \
     R -e "BiocManager::install('demuxmix', ask=FALSE);library('demuxmix')" && \
     R -e 'BiocManager::install("TFBSTools", type = "source", force = TRUE);library("TFBSTools")' && \
-    R -e 'BiocManager::install("stuart-lab/signac");library("Signac")' && \
     R -e 'BiocManager::install("gtsummary");library("gtsummary")' && \
     R -e 'BiocManager::install("flextable");library("flextable")' && \
     R -e 'BiocManager::install("BSgenome.Hsapiens.UCSC.hg38");library("BSgenome.Hsapiens.UCSC.hg38")' && \
@@ -71,12 +98,7 @@ ENV PATH=/opt/strelka-2.9.10.centos6_x86_64/bin/:$PATH
 
 COPY irtools.centos /usr/bin/irtools
 
-RUN apt-get update && \
-        apt-get install -y libudunits2-dev libgdal-dev && \
-        rm -rf /var/lib/apt/lists/*
 RUN R -e "BiocManager::install('sf', force=TRUE, ask=FALSE);library('sf')"
-
-RUN R -e "BiocManager::install('liuqivandy/MEcell', ask=FALSE);library('MEcell')"
 
 RUN R -e "BiocManager::install('logger', ask=FALSE);library('logger')"
 
@@ -109,14 +131,14 @@ RUN R -e "library('sccomp'); \
           model3 = sccomp:::load_model('glm_multi_beta_binomial_simulate_data', cache_dir='/opt/sccomp_models', force = TRUE, threads = 8)"
 RUN ls -l /opt/sccomp_models/2.1.27
 
-RUN R -e "devtools::install_github('JEFworks-Lab/MERINGUE')"
-RUN R -e "devtools::install_github('KlugerLab/ALRA')"
-RUN R -e "devtools::install_github('zdebruine/RcppML')"
-RUN R -e "devtools::install_github('jinworks/SpatialCellChat')"
+RUN R -e "devtools::install_github('JEFworks-Lab/MERINGUE'); library('MERINGUE')"
+RUN R -e "devtools::install_github('KlugerLab/ALRA'); library('ALRA')"
+RUN R -e "devtools::install_github('zdebruine/RcppML'); library('RcppML')"
+RUN R -e "devtools::install_github('jinworks/SpatialCellChat'); library('SpatialCellChat')"
 
-RUN R -e "Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE); install.packages('NMF')"
-RUN R -e "devtools::install_github('jokergoo/circlize')"
-RUN R -e "devtools::install_github('jokergoo/ComplexHeatmap')"
+RUN R -e "Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE); install.packages('NMF'); library('NMF')"
+RUN R -e "devtools::install_github('jokergoo/circlize'); library('circlize')"
+RUN R -e "devtools::install_github('jokergoo/ComplexHeatmap'); library('ComplexHeatmap')"
 
 #The original cellchat package has a bug in visualization, which is fixed in the forked version. So we install the forked version here.
 #RUN R -e "devtools::install_github('jinworks/CellChat')"
@@ -127,7 +149,6 @@ RUN R -e "BiocManager::install('compbiomed/singleCellTK', ref = 'devel', ask=FAL
 RUN R -e "BiocManager::install('leidenbase', ask=FALSE);library('leidenbase')"
 
 #20260408, install multi-thread MEcell, which is much faster than the original version.
-RUN R -e "BiocManager::install(ask=FALSE)"
 RUN R -e "BiocManager::install('liuqivandy/MEcell', ask=FALSE);library('MEcell')"
 
 RUN cd /opt && \
@@ -139,19 +160,9 @@ RUN cd /opt && \
     rm -rf silhouette && \
     chmod +x /usr/bin/silhouette 
 
-RUN pip install --no-cache-dir numpy scipy scikit-learn cupy-cuda12x==13.6.0
-COPY MEcell_python /opt/MEcell_python
-RUN cd /opt/MEcell_python && \
-    pip3 install . && \
-    cd .. && \
-    rm -rf MEcell_python
-    
 RUN R -e "BiocManager::install('fgsea', ask=FALSE, force=TRUE);library('fgsea')"
 
 #20260427, install the packages for extracting cell images
-RUN pip install --no-cache-dir pyproj geopandas numpy pandas tifffile rasterio shapely ipykernel imagecodecs
-#20260427, update all packages to the latest version, let's hope it will fix the problem of spatial visualization issue.
-RUN R -e "BiocManager::install(force=TRUE, ask=FALSE)"
 #20260515, install azimuth first, then roll back Signac to 1.1.6.0.
 #otherwise Azimuth will throw error: object 'RunChromVAR' is not exported by 'namespace:Signac'
 RUN R -e "BiocManager::install(c('satijalab/azimuth'), force=TRUE, ask=FALSE)"
