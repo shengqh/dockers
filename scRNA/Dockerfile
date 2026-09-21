@@ -192,3 +192,5 @@ RUN R -e "BiocManager::install('liuqivandy/SpaGene', ask=FALSE);library('SpaGene
 ENV PKG_CXXFLAGS="-std=gnu++14"
 RUN R -e "BiocManager::install('motifmatchr', ask=FALSE, update=FALSE)"
 RUN R -e "devtools::install_github('GreenleafLab/ArchR', ref='master', repos = BiocManager::repositories(), ask=FALSE);library('ArchR')"
+
+RUN R -e "BiocManager::install('C-HW/GLIMES', ask=FALSE, update=FALSE);library('GLIMES')"
