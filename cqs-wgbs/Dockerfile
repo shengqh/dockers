@@ -1,16 +1,17 @@
 # Build htslib from source
-FROM r-base:4.4.2
+FROM r-base:4.5.3
 
-RUN apt-get update && apt-get install -y libgd-dev libzstd-dev
-
-RUN apt-get install -y \
+RUN apt-get update && \
+    apt-get install -y \
     build-essential \
     cmake \
+    autoconf \
     zlib1g-dev \
+    libgd-dev \
+    libzstd-dev \
     libhdf5-dev \
     libnss-sss \
     curl \
-    autoconf \
     bzip2 \
     pigz \
     git \
@@ -18,9 +19,14 @@ RUN apt-get install -y \
     libncursesw5-dev \
     libbz2-dev \
     liblzma-dev \
-    bzip2 \
-    unzip
-
+    unzip \
+    libv8-dev \
+    libxml2-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libcairo2-dev \
+    libxt-dev \
+    pandoc
 
 RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'))" >> /usr/lib/R/etc/Rprofile.site
 
@@ -40,16 +46,11 @@ RUN R -e "BiocManager::install('limma'); library('limma')"
 RUN R -e "BiocManager::install('DT'); library('DT')"
 RUN R -e "BiocManager::install('data.table'); library('data.table')"
 RUN R -e "BiocManager::install('htmltools'); library('htmltools')"
-
-RUN apt-get install -y libv8-dev
 RUN R -e "BiocManager::install('randomcoloR'); library('randomcoloR')"
 
 RUN R -e "BiocManager::install('knitr'); library('knitr')"
 RUN R -e "BiocManager::install('RCurl'); library('RCurl')"
 
-RUN apt-get install -y libxml2-dev
-
-RUN apt-get install -y libharfbuzz-dev libfribidi-dev
 RUN R -e "BiocManager::install('textshaping'); library('textshaping')"
 
 RUN R -e "BiocManager::install('kableExtra'); library('kableExtra')"
@@ -64,11 +65,9 @@ RUN R -e "BiocManager::install('GenomicRanges'); library('GenomicRanges')"
 RUN R -e "BiocManager::install('tidyverse'); library('tidyverse')"
 RUN R -e "BiocManager::install('methylKit'); library('methylKit')"
 
-RUN apt-get install -y libcairo2-dev libxt-dev
 RUN R -e "BiocManager::install('Cairo'); library('Cairo')"
 RUN R -e "BiocManager::install('minfi'); library('minfi')"
 
-RUN apt-get install -y pandoc
-
 RUN R -e "BiocManager::install('rmdformats'); library('rmdformats')"
 RUN R -e "BiocManager::install('ComplexHeatmap'); library('ComplexHeatmap')"
+RUN R -e "BiocManager::install('txdbmaker'); library('txdbmaker')"
