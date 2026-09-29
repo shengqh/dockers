@@ -71,3 +71,5 @@ RUN R -e "BiocManager::install('minfi'); library('minfi')"
 RUN R -e "BiocManager::install('rmdformats'); library('rmdformats')"
 RUN R -e "BiocManager::install('ComplexHeatmap'); library('ComplexHeatmap')"
 RUN R -e "BiocManager::install('txdbmaker'); library('txdbmaker')"
+
+ENV TZ=America/Chicago
