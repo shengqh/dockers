@@ -194,3 +194,4 @@ RUN R -e "BiocManager::install('motifmatchr', ask=FALSE, update=FALSE)"
 RUN R -e "devtools::install_github('GreenleafLab/ArchR', ref='master', repos = BiocManager::repositories(), ask=FALSE);library('ArchR')"
 
 RUN R -e "BiocManager::install('C-HW/GLIMES', ask=FALSE, update=FALSE);library('GLIMES')"
+RUN R -e "BiocManager::install('Danko-Lab/BayesPrism/BayesPrism', ask=FALSE, update=FALSE);library('BayesPrism')"
