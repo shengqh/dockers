@@ -195,3 +195,23 @@ RUN R -e "devtools::install_github('GreenleafLab/ArchR', ref='master', repos = B
 
 RUN R -e "BiocManager::install('C-HW/GLIMES', ask=FALSE, update=FALSE);library('GLIMES')"
 RUN R -e "BiocManager::install('Danko-Lab/BayesPrism/BayesPrism', ask=FALSE, update=FALSE);library('BayesPrism')"
+
+RUN mkdir -p /opt/sccomp_models
+RUN R -e "BiocManager::install('MangiolaLaboratory/sccomp', ask=FALSE);library('sccomp')"
+RUN R -e "library('sccomp'); \
+          model1 = sccomp:::load_model('glm_multi_beta_binomial', cache_dir='/opt/sccomp_models', force = TRUE, threads = 8); \
+          model2 = sccomp:::load_model('glm_multi_beta_binomial_generate_data', cache_dir='/opt/sccomp_models', force = TRUE, threads = 8); \
+          model3 = sccomp:::load_model('glm_multi_beta_binomial_simulate_data', cache_dir='/opt/sccomp_models', force = TRUE, threads = 8)"
+RUN ls -l /opt/sccomp_models/*
+
+RUN echo "$CMDSTAN/stan/lib/stan_math/lib/tbb" > /etc/ld.so.conf.d/cmdstan-tbb.conf && ldconfig
+
+# Install radian
+RUN pip3 install --no-cache-dir radian
+
+# Install languageserver for VS Code
+RUN R -e "install.packages('languageserver', repos='https://cloud.r-project.org');library('languageserver')"
+RUN R -e "install.packages('jgd', repos = 'https://reditorsupport.r-universe.dev');library('jgd')"
+RUN R -e "install.packages('sess', repos = c('https://reditorsupport.r-universe.dev', getOption('repos')));library('sess')"
+RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/eitsupi/arf/releases/download/v0.6.0/arf-console-installer.sh | sh
+
