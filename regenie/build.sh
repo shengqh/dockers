@@ -1,3 +1,3 @@
 date_string=`date +%Y%m%d`
-docker build --progress=plain -t shengqh/regenie4:${date_string} .
-docker tag shengqh/regenie4:${date_string} shengqh/regenie4:latest
+docker build --progress=plain -t shengqh/regenie:4.1.3.1 .
+docker tag shengqh/regenie:4.1.3.1 shengqh/regenie:latest
