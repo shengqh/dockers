@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:4.5.0
+FROM rocker/tidyverse:4.5.3
 
 # Install SSH
 RUN apt-get update && \
@@ -22,6 +22,13 @@ RUN mkdir -p /home/rstudio/.ssh && \
     chmod 700 /home/rstudio/.ssh
 
 EXPOSE 22 8787
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libhdf5-dev 
+
+RUN R -e "install.packages('BiocManager')"
+RUN R -e "BiocManager::install('remotes', ask=FALSE)"
+RUN R -e "BiocManager::install(ask=FALSE)"
 
 # Start both SSH and RStudio
 CMD service ssh start && /init
