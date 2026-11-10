@@ -215,3 +215,5 @@ RUN R -e "install.packages('jgd', repos = 'https://reditorsupport.r-universe.dev
 RUN R -e "install.packages('sess', repos = c('https://reditorsupport.r-universe.dev', getOption('repos')));library('sess')"
 RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/eitsupi/arf/releases/download/v0.6.0/arf-console-installer.sh | sh
 
+# 20261109 Seurat V6
+RUN R -e "BiocManager::install('satijalab/seurat', ask=FALSE);library('Seurat')"
