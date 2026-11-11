@@ -24,11 +24,14 @@ RUN mkdir -p /home/rstudio/.ssh && \
 EXPOSE 22 8787
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libhdf5-dev 
+    libhdf5-dev cmake libmagick++-dev imagemagick libglpk-dev
 
 RUN R -e "install.packages('BiocManager')"
 RUN R -e "BiocManager::install('remotes', ask=FALSE)"
-RUN R -e "BiocManager::install(ask=FALSE)"
+RUN R -e "BiocManager::install(c('R.utils'), ask=FALSE);library('R.utils')"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libnode-dev
 
 # Start both SSH and RStudio
 CMD service ssh start && /init
