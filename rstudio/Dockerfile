@@ -31,7 +31,7 @@ RUN R -e "BiocManager::install('remotes', ask=FALSE)"
 RUN R -e "BiocManager::install(c('R.utils'), ask=FALSE);library('R.utils')"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libnode-dev
+    libnode-dev libgsl-dev
 
 # Start both SSH and RStudio
 CMD service ssh start && /init
