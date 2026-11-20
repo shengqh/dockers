@@ -1,19 +1,9 @@
-FROM shengqh/bioinfo_base:20231016
-
-RUN apt-get update && \
-  apt-get install -y lftp unzip libsqlite3-dev libproj-dev libcairo2-dev libharfbuzz-dev libfribidi-dev
-
-RUN pip3 install --no-cache-dir --upgrade pip
-RUN pip3 install --no-cache-dir --upgrade pysam \
-    biopython \
-    pytabix \
-    pandas \
-    seaborn 
+FROM shengqh/bioinfo_base:20260828
 
 RUN git config --global pull.rebase false
 
 RUN R -e "install.packages('tidyverse');library('tidyverse')"
-RUN R -e "BiocManager::install(c('vegan', 'remotes', 'yihui/knitr', 'genefilter'))"
+RUN R -e "BiocManager::install(c('vegan', 'yihui/knitr', 'genefilter'))"
 RUN R -e "BiocManager::install()"
 
 ARG BOWTIE_VERSION="1.3.1"
@@ -49,7 +39,7 @@ RUN cd /opt; \
     rm -rf fastq-join; \
     fastq-join -h
 
-ENV NGSPERL_VERSION="20231103"
+ENV NGSPERL_VERSION="20260830"
 RUN cd /opt/ngsperl && git pull
 RUN R -e "BiocManager::install(ask=FALSE)"
 
@@ -61,3 +51,21 @@ RUN cd /opt; \
     cd ..; \
     rm -rf spcount; \
     spcount -h
+
+RUN mkdir -p /opt/dotnet; \
+    cd /opt/dotnet; \
+    wget https://dot.net/v1/dotnet-install.sh; \
+    chmod +x dotnet-install.sh; \
+    ./dotnet-install.sh --channel 10.0 --install-dir /opt/dotnet; \
+    rm dotnet-install.sh
+ENV PATH=/opt/dotnet:$PATH
+
+
+ARG SMALLRNACOUNT_VERSION="1.0.1"
+RUN mkdir -p /opt/SmallRNACountBuilder; \
+    cd /opt/SmallRNACountBuilder; \
+    wget https://github.com/shengqh/SmallRNACountBuilder/releases/download/v${SMALLRNACOUNT_VERSION}/SmallRNACountBuilder.v${SMALLRNACOUNT_VERSION}.zip; \
+    unzip SmallRNACountBuilder.v${SMALLRNACOUNT_VERSION}.zip; \
+    rm SmallRNACountBuilder.v${SMALLRNACOUNT_VERSION}.zip; \
+    dotnet /opt/SmallRNACountBuilder/SmallRNACountBuilder.dll --version
+

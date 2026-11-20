@@ -1,15 +1,14 @@
-FROM shengqh/bioinfo_base:20231016
+FROM shengqh/bioinfo_base:20251016
 
 RUN apt-get update
 RUN apt-get install -y libcairo2-dev
 
-ENV BWA_VERSION="0.7.18"
+ENV BWA_VERSION="0.7.19"
 RUN cd \opt; \
     wget https://github.com/lh3/bwa/archive/refs/tags/v${BWA_VERSION}.tar.gz; \
     tar -xzvf v${BWA_VERSION}.tar.gz ; \
     cd bwa-${BWA_VERSION}; \
     make; \
-    make install; \
     cp bwa /usr/bin ; \
     cd .. ; \
     rm -rf bwa-${BWA_VERSION}
@@ -20,14 +19,14 @@ RUN mkdir /opt/annovar
 ADD annovar /opt/annovar
 ENV PATH=/opt/annovar:$PATH
 
-ENV Vcfanno_VERSION="0.3.5"
+ENV Vcfanno_VERSION="0.3.9"
 RUN wget https://github.com/brentp/vcfanno/releases/download/v${Vcfanno_VERSION}/vcfanno_linux64 ; \
     chmod 755 vcfanno_linux64 ; \
     mv vcfanno_linux64 /usr/bin/vcfanno
 
 ARG SUBREAD_VERSION="2.0.2"
 RUN cd /opt; \
-    wget -O subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-${SUBREAD_VERSION}/subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz/download; \
+    wget https://github.com/ShiLab-Bioinformatics/subread/releases/download/${SUBREAD_VERSION}/subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz; \
     tar -xzvf subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz; \
     rm subread-${SUBREAD_VERSION}-Linux-x86_64.tar.gz
 ENV PATH=/opt/subread-${SUBREAD_VERSION}-Linux-x86_64/bin:$PATH
@@ -36,6 +35,7 @@ RUN featureCounts -v
 
 RUN apt-get install -y tabix
 
+RUN pip install --upgrade pip
 RUN pip3 install --no-cache-dir --upgrade \
     pysam \
     biopython \
@@ -71,21 +71,31 @@ RUN R -e "BiocManager::install('tibble');library('tibble')"
 
 #RUN R -e "BiocManager::install('tidyverse');library('tidyverse')"#tidyverse is very hard to install.
 
-RUN cd /usr/bin; \ 
-    wget https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools.static.binary; \
-    mv bedtools.static.binary bedtools; \
-    chmod 755 bedtools; \
-    bedtools -h
+ARG BEDTOOLS_VERSION="2.31.1"
+RUN cd /app; \ 
+    wget https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLS_VERSION}/bedtools-${BEDTOOLS_VERSION}.tar.gz; \
+    tar xvzf bedtools-${BEDTOOLS_VERSION}.tar.gz; \
+    rm bedtools-${BEDTOOLS_VERSION}.tar.gz; \
+    cd bedtools2; \
+    make; \
+    make install; \
+    cd ..; \
+    rm -rf bedtools2; \
+    bedtools --version
 
+ARG TrimGalore_VERSION="2.3.0"
 RUN cd /opt && \
-  curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.10.tar.gz -o trim_galore.tar.gz && \
+  curl -fsSL https://github.com/FelixKrueger/TrimGalore/releases/download/v${TrimGalore_VERSION}/trim_galore-linux-x86_64.tar.gz -o trim_galore.tar.gz && \
   tar xvzf trim_galore.tar.gz && \
   rm trim_galore.tar.gz && \
-  TrimGalore-0.6.10/trim_galore --help
+  trim_galore-linux-x86_64/trim_galore --help
 
-ENV PATH=/opt/TrimGalore-0.6.10:$PATH
+ENV PATH=/opt/trim_galore-linux-x86_64:$PATH
 
 RUN pip3 install fastqsplitter
 
 #use old version of BiocFileCache (2.8.0) will cause error in getBM with useCache=TRUE
 RUN R -e "BiocManager::install('Bioconductor/BiocFileCache', force=TRUE);packageVersion('BiocFileCache')"
+
+RUN R -e "BiocManager::install('vcfR', force=TRUE);packageVersion('vcfR')"
+RUN R -e "BiocManager::install('plotly', force=TRUE);packageVersion('plotly')"

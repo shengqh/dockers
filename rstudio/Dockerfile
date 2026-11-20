@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:4.5.0
+FROM rocker/tidyverse:4.5.3
 
 # Install SSH
 RUN apt-get update && \
@@ -22,6 +22,16 @@ RUN mkdir -p /home/rstudio/.ssh && \
     chmod 700 /home/rstudio/.ssh
 
 EXPOSE 22 8787
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libhdf5-dev cmake libmagick++-dev imagemagick libglpk-dev
+
+RUN R -e "install.packages('BiocManager')"
+RUN R -e "BiocManager::install('remotes', ask=FALSE)"
+RUN R -e "BiocManager::install(c('R.utils'), ask=FALSE);library('R.utils')"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libnode-dev libgsl-dev
 
 # Start both SSH and RStudio
 CMD service ssh start && /init

@@ -1,3 +1,3 @@
-FROM quay.io/biocontainers/regenie:4.0--h90dfdf2_1
+FROM quay.io/biocontainers/regenie:4.1.3.1--h9a87a4f_0
 
 RUN regenie --version
