@@ -1,0 +1,7 @@
+FROM ghcr.io/scverse/rapids-singlecell-cu12:latest
+
+ENV CUDA_PATH=/usr/local/cuda-12.9
+
+RUN pip install --upgrade pip
+RUN pip install scanpy \
+  celltypist 
