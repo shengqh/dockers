@@ -216,4 +216,7 @@ RUN R -e "install.packages('sess', repos = c('https://reditorsupport.r-universe.
 RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/eitsupi/arf/releases/download/v0.6.0/arf-console-installer.sh | sh
 
 # 20261109 Seurat V6
-RUN R -e "BiocManager::install('satijalab/seurat', ask=FALSE);library('Seurat')"
+RUN R -e "pak::pak('satijalab/seurat', ask=FALSE);library('Seurat')"
+
+# install 1.0.2. Install from github with new version will failed in saving sce to h5ad file.
+RUN R -e "pak::pak('anndataR', ask=FALSE);library('anndataR')"
